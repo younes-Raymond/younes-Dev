@@ -1,4 +1,4 @@
-
+alert('hello om working')
 // check if there is storage color option 
 let maincolor = localStorage.getItem("color_option");
 
@@ -443,10 +443,10 @@ tlinks.onclick = function (e) {
 };
 
 // logo handler 
-const  Funlogo = () => {
-  let logo = document.getElementById('logo') 
-logo.setAttribute('src','/images/170.png')
+// const  Funlogo = () => {
+//   let logo = document.getElementById('logo') 
+// logo.setAttribute('src','/images/170.png')
 
 
-}
-Funlogo();
+// }
+// Funlogo();
