@@ -1,6 +1,8 @@
 const express = require('express');
 const ejs = require('ejs');
 const app = express();
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
 const bodyParser = require('body-parser');
 const { Server } = require('http');
 const nodemailer = require('nodemailer');
