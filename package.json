@@ -5,7 +5,7 @@
   },
   "name": "project-render",
   "version": "1.0.0",
-  "main": "./server.js",
+  "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -21,3 +21,4 @@
   "homepage": "https://github.com/younes-beep/test-render#readme",
   "description": ""
 }
+

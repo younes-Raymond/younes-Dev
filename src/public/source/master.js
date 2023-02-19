@@ -1,4 +1,3 @@
-alert('hello om working')
 // check if there is storage color option 
 let maincolor = localStorage.getItem("color_option");
 
