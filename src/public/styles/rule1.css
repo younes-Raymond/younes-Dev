@@ -276,11 +276,11 @@ cursor: pointer;
 }
 
 .header-area .logo{
-
     width: 200px;
-    height: 40px;
-    background-image:url(/images/Brandmark\ -\ make\ your\ logo\ in\ minutes\ -\ Google\ Chrome\ 9_11_2022\ 1_43_45\ PM\ \(2\).png);
+    height: 60px;
     padding: 17px;
+    background-size: cover;
+
     font-weight: bold;
     color: #fff;
     cursor: pointer;
@@ -290,7 +290,7 @@ cursor: pointer;
 
 
 .header-area .logo:hover{
-    height: 60px;
+ height: 60px;
 margin-left: 2px;   
 color: var(--main-color);
 box-shadow: 2px 2px 2px #fff, .1em 0 .4em var(--main-color);
@@ -467,7 +467,8 @@ box-shadow: 2px 2px 2px #fff, .1em 0 .4em var(--main-color);
 .about-us .info-box p {
     line-height: 1.0;
     color: #777;
-    justify-content: space-between;
+    margin: 5% 0;
+   
 }
 
 .about-us #link   {
@@ -501,6 +502,10 @@ box-shadow: 2px 2px 2px #fff, .1em 0 .4em var(--main-color);
     background-image: url(/images/112.png);
     background-color:var(--main-color);
     opacity: 0.8;
+    width: 100%;
+    height: 100%;
+    border-radius: 15px;
+    margin: 6% 0;
 }
 
 .container {
@@ -547,6 +552,22 @@ box-shadow: 2px 2px 2px #fff, .1em 0 .4em var(--main-color);
     border-radius: 5%;
     margin: 0% 5% 5% 0%;
 }
+.mapouter h2 {
+    width: 100%;
+    text-align: center;
+    color: var(--main-color);
+    border: var(--main-color) solid 1px;
+    box-shadow: var(--main-shadow);
+    cursor: pointer;    
+}
+.mapouter p {
+        margin: 2% 0%;
+        height: 10%;
+        color: var(--main-color);
+        font-weight: 900;
+        font-size: x-large;
+}
+
 .conatiner-embed {
     width: 100%;
     height: 100vh;
@@ -556,16 +577,7 @@ box-shadow: 2px 2px 2px #fff, .1em 0 .4em var(--main-color);
     flex-direction: column;
 
 }
-.mapouter h2 {
-    width: 100%;
-    text-align: center;
-    color: var(--main-color);
-    border: var(--main-color) solid 1px;
-    box-shadow: var(--main-shadow);
-    cursor: pointer;
-    margin: 0% 0% 11% 0%;
-    
-}
+
 
 .gmap_canvas{
     overflow:hidden;
@@ -586,6 +598,7 @@ box-shadow: 2px 2px 2px #fff, .1em 0 .4em var(--main-color);
     padding-top: 50px;
     padding-bottom: 50px;
     background-color: #EEE;
+    margin: 40% 0% 0 0;
 
 }
 .skills h2{
@@ -942,7 +955,7 @@ box-shadow: 2px 2px 2px #fff, .1em 0 .4em var(--main-color);
 }
 
 .features .feat-box {
-    width: calc(100% /3);
+    width: calc(100% /2);
     float: left;
     text-align: center;
     margin-bottom: 40px;
@@ -1170,9 +1183,6 @@ iframe {
     
 }
 
-
-
-
 .footer1 p {
     font-weight: bold;
     text-align: center;
@@ -1263,8 +1273,6 @@ footer{
     color: #fff;
     padding: 5px;
     justify-content: space-between;
-    
-
 }
 
 footer ul li .facebook{

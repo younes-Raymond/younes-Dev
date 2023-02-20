@@ -1,12 +1,11 @@
 const express = require('express');
 const ejs = require('ejs');
 const app = express();
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
 const bodyParser = require('body-parser');
 const { Server } = require('http');
 const nodemailer = require('nodemailer');
 const path = require('path');
+const { error } = require('console');
 app.use(express.json());
 app.set('views', path.join(__dirname,'views'));
 app.set('view engine', 'ejs');
@@ -33,12 +32,6 @@ app.post('/submit-form', (req, res) => {
   const subject = req.body.subject;
   const message = req.body.message;
 
-  console.log(name)
-  console.log(phone)
-  console.log(email)
-  console.log(subject)
-  console.log(message)
-
    // create reusable transporter object using the default SMTP transport
    let transporter = nodemailer.createTransport({
     service: 'gmail',
@@ -47,13 +40,12 @@ app.post('/submit-form', (req, res) => {
       pass:"iqwvmellavcyatyl"
     }
   });
-
   // setup email data 
 
   // setup email data
   let mailOptions = {
     from: 'raymondyounes2@gmail.com',
-    to: 'youneshero436@gmail.com',
+    to: 'raymondyounes2@gmail.com',
     subject: 'New form submission',
     html: `<p>Name: ${name}</p>
            <p>Phone: ${phone}</p>
@@ -72,6 +64,24 @@ app.post('/submit-form', (req, res) => {
         res.send('Message sent successfully!');
       }
     });
+
+    let thankYouOptions = {
+      from: 'raymondyounes2@gmail.com',
+      to: email,
+      subject: 'Thank you for your form submission!',
+      html: `<p>Dear ${name},</p>
+             <p>Thank you for submitting the form on our website. We have received your message and will get back to you as soon as possible.</p>
+             <p>Best regards,</p>
+             <p>Your Website Team</p>`
+    };
+    transporter.sendMail(thankYouOptions, (error, info) => {
+      if (error) {
+        console.log(error);
+      } else {
+        console.log('Thank you email sent: %s', info.messageId);
+      }
+    });
+    res.send('Message sent successfully!');
   });
 
 const PORT = process.env.PORT || 8000;
