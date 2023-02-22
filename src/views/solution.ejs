@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solutions</title>
+    <link rel="stylesheet" type="text/css" href="styles/rule1.css" >
+</head>
+<body>
+  <form method="post" action="/articles">
+    <h2>Create a New Article</h2>
+    <label for="article-title">Title:</label>
+    <input type="text" id="article-title" name="title" required placeholder="Enter the tech or what kind of stack you used to solve this problem" minlength="5" maxlength="100"><br>
+  
+    <label for="article-category">Problem:</label>
+    <input type="text" id="article-category" name="category" required placeholder="Enter the problem and error if you have it" minlength="5" maxlength="100"><br>
+  
+    <label for="article-content">Solution:</label>
+    <textarea id="article-content" name="content" rows="10" cols="50" required placeholder="Here enter how you solve this problem" minlength="10"></textarea><br>
+  
+    <label for="article-author-name">Author Name:</label>
+    <input type="text" id="article-author-name" name="authorName" required placeholder="Enter your name" minlength="3" maxlength="50"><br>
+  
+    <label for="article-author-specialisation">Author Specialisation:</label>
+    <input type="text" id="article-author-specialisation" name="authorSpecialisation" required placeholder="Enter your specialisation" minlength="5" maxlength="50"><br>
+  
+    <button type="submit" id="submit-article">Submit</button>
+  </form>
+    
+    <section>
+      <h2>Existing Articles</h2>
+      <ul id="articles-list">
+        <% articles.forEach(function(article) { %>
+          <li>
+            <h3><%= article.title %></h3>
+            <p>Category: <%= article.category %></p>
+            <p><%= article.content %></p>
+          </li>
+        <% }) %>
+      </ul>
+      <div id="articles-container">
+        <!-- list of articles -->
+        <ul id="articles-list">
+            <!-- list of articles will be dynamically added here -->
+          </ul>
+      </div>
+    </section>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        $('#submit-article').on('click', function(event) {
+          event.preventDefault();
+          // send  form data using aajax 
+          $.ajax({
+            method: 'POST',
+            url: '/articles',
+            data: {
+              title: $('#article-title').val(),
+              category: $('#article-category').val(),
+              content: $('#article-content').val(),              
+              Author_Name: $('#article-author-name').val(),
+              Author_Specialisation: $('#article-author-specialisation').val(),
+
+            },
+            success: function(data) {
+                console.log(data)
+// create HTML for the new article
+var articleHTML = '<div class="article-container"><h3> title: ' + data.title + '</h3><p>Category of probleme : ' + data.category + '</p><p> solution:' + data.content + '</p><p>By ' + data.authorName + ', Author Specialisation: ' + data.authorSpecialisation + '</p></div>';
+// append the new article to the list of articles
+$('#articles-container').append(articleHTML);
+        }
+          });
+        });
+      });
+    </script>
+    <script src="source/master.js"></script>
+</body>
+</html>
+
+
+

@@ -1,3 +1,4 @@
+
 // check if there is storage color option 
 let maincolor = localStorage.getItem("color_option");
 
@@ -216,6 +217,7 @@ window.onscroll = function () {
 
     }
 };
+
 
 
 // end progress skills
@@ -449,3 +451,40 @@ tlinks.onclick = function (e) {
 
 // }
 // Funlogo();
+
+// interface ModeButton extends HTMLButtonElement {
+//     mode: 'light' | 'dark';
+//   }
+  
+  document.addEventListener("DOMContentLoaded", function () {
+  
+    const btn_mode = document.querySelector('.toggleButton') 
+    //as ModeButton;
+    btn_mode.addEventListener('click', toggleDarkMode);
+  
+    
+  function toggleDarkMode() {
+    const body = document.body;
+    if (body.classList.contains('dark-theme')) {
+      body.classList.remove('dark-theme');
+      navBar?.classList.remove('dark-theme');
+      btn_mode.classList.toggle('bg-white');
+      btn_mode.mode = 'light';
+    } else {
+      body.classList.add('dark-theme');
+    //   navBar?.classList.add('dark-theme');
+      btn_mode.style.setProperty('background', 'black');
+      btn_mode.style.cssText = "border-radius:10px; background:white;"
+      btn_mode.mode = 'dark';
+    }
+  }
+  });
+
+
+let solution = document.getElementById('solution');
+
+solution.addEventListener('click', () => {
+    window.location.href = 'solution'
+})
+  
+  
