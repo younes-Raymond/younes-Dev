@@ -1292,40 +1292,61 @@ footer .input-form{
 
 /*  start  solution page  */
 
-body 
-{
-    padding: 0;
-    margin: 0;
-}
+/* start the form page ofsolutionpage  */
 
-form 
+#form-of-article
 {
+    min-height: 600px;
+    background-image: url(/images/10.jpg);
+    background-size: cover;
+    padding-top: 80px;
+    padding-bottom: 80px;
+    position: relative;
     display: flex;
     flex-direction: column;
-    align-items: center;
     justify-content: space-evenly;
-    font-size: 33px;
+    color: white;
+    font-weight: bold;
 }
-
-form input:not(#article-content) 
+#form-of-article  h2 
 {
-    height: 50px;
     width: 50%;
+    margin: 0 25%;
 }
-form #article-content 
+#form-of-article  label 
 {
-    width: 70%;
+    background-color: var(--main-color);
+    width: 20%;
+    text-align: center;
+    border-radius: 3px;
 }
-button 
+#form-of-article input
 {
-    width: 40%;
-    height: 30px;
+    width: 90%;
+    height: 60px;
+    border-radius: 10px;
+}
+#form-of-article textarea 
+{
+    width: 90%;
+    height: 400px;
+}
+#form-of-article button 
+{
+    background-color: var(--main-color);
+    height: 47px;
+    color: white;
+    font-size: xx-large;
+    width: 30%;
+    margin: 5% 30%;
     border: none;
     cursor: pointer;
-    background: var(--main-color);
-    color: var(--main-color2);
     border-radius: 6px;
 }
+/* start the form page ofsolutionpage  */
+
+
+
 /* Style for the article list */
 #articles-container 
 {
@@ -1339,12 +1360,10 @@ button
     margin: 4% 0% ;
   }
  
-/* .article-container
+.article-container
   {
-    background-color: var(--main-color);
-    margin: 4% 0% ;
-    border-radius: 10px;
-  } */
+   
+  }
   .article-container {
     background-color: var(--main-color);
     margin: 4% 0%;
@@ -1353,6 +1372,7 @@ button
     display: flex;
     flex-direction: column;
     padding: 20px;
+    color: var(--main-color2);
   }
   
   .article-container h3 {
@@ -1372,9 +1392,31 @@ button
     justify-content: space-between;
   }
   
-  .article-container .author-info span {
-    font-weight: bold;
-  }
-  
+.actions-container
+{
+margin: 0% 0% 3%;
+background: var(--main-color2);
+width: 100%;
+display: flex;
+flex-direction: row;
+justify-content: space-around;
+border-radius: 10px;
+align-items: center;
+
+}
+
+.actions-container img 
+{
+width: 10%;
+
+}
+
+.actions-container img:hover
+{
+    padding: 2px;
+    cursor: pointer;
+
+
+}
 
   /* end solution page  */
