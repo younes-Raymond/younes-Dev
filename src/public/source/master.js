@@ -480,7 +480,6 @@ tlinks.onclick = function (e) {
   }
   });
 
-
 let solution = document.getElementById('solution');
 
 solution.addEventListener('click', () => {

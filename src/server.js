@@ -3,17 +3,21 @@ const ejs = require('ejs');
 const app = express();
 var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
+const EventEmitter = require('events');
 const { Server } = require('http');
 const nodemailer = require('nodemailer');
+const { MongoClient } = require('mongodb');
+const $ = require('jquery');
 const path = require('path');
 const { error } = require('console');
-const $ = require('jquery');
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 app.use(express.json());
 app.set('views', path.join(__dirname,'views'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/')));
+
+
 app.get('/', (req, res) => {
   res.render('Home');
 });
@@ -21,44 +25,89 @@ app.get('/Home', (req, res) => {
   res.render('Home');
 });
 
-var articles = [];
+
+
+//  the default solution page 
+
 app.get('/solution', function(req, res) {
-  var articles = [  { title: 'Article 1', category: 'Node.js' },    { title: 'Article 2', category: 'JavaScript' },    { title: 'Article 3', category: 'CSS' }  ];
+  var articles = [  { titlew: 'Article 1', category: 'Node.js' },    { title: 'Article 2', category: 'JavaScript' },    { title: 'Article 3', category: 'CSS' }  ];
   res.render('solution', { articles: articles });
 });
 
+const uri = "mongodb+srv://raymondyounes:cu4yLypyIbmMfL7K@younes-dev.enszkpk.mongodb.net/test";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+// solution page rerieve data from datanbase test2 collection articles2
+// app.get('/solution', function(req, res) {
+//   const db = client.db('test2');
+//   const collection = db.collection('articles2');
+//   collection.findOne({}), function(err, articles) {
+//     if (err) {
+//       console.log('erro inside call back func')
+//       console.error(err);
+//       res.status(500).send('Error reading articles from database');
+//       return;
+//     }
+//     console.log(articles);
+//     res.render('solution', { articles: articles });
+//   };
+
+// });
+
+
+// client.close();
+
+
+
+
+
+
 app.post('/articles', function(req, res) {
-  console.log(req.body)
   // Extract the article data from the request body
   var title = req.body.title;
   var category = req.body.category;
   var content = req.body.content;
   var authorName = req.body.Author_Name;
   var authorSpecialisation = req.body.Author_Specialisation;
-  // console.log(title)
-  // console.log(category)
-  // console.log(content)
-  // console.log(authorName)
-  // console.log(authorSpecialisation)
-  
+
   // Save the new article to the database
-  // ...
+  
+    const db = client.db('test2');
+    const collection = db.collection('articles2');
+    collection.insertOne({ 
+      title: title, 
+      category: category,
+      content: content,
+      authorName: authorName,
+      authorSpecialisation: authorSpecialisation
+    }, function(err, result) {
+      if (err) {
+        console.error(err);
+        res.status(500).send('Error saving article to database');
+        console.log('data not inserting correctly');
+        return;
+      }
+      console.log(result);
+      console.log("New article inserted into database");
+      client.close();
+    });
+  // Return the new article as JSON
   var newArticle = {title:title,category:category,content:content,authorName:authorName,authorSpecialisation:authorSpecialisation};
-
-  articles.push(newArticle);
-
-  console.log(newArticle)
-  // console.log(articles)
-  // Redirect the user back to the solution page
+  console.log('Returning new article as JSON:', newArticle);
   res.json(newArticle);
 });
+
+// another end point 
+
+
+
 
 
 // Parse incomig form data
 
 
-// handle form submission 
 
+// handle form submission 
 app.post('/submit-form', (req, res) => {
   console.log(req.body)
   const name = req.body.username;
@@ -118,6 +167,24 @@ app.post('/submit-form', (req, res) => {
     });
     res.send('Message sent successfully!');
   });
+
+  const emitter = new EventEmitter();
+
+emitter.setMaxListeners(20); // set max listeners before adding any listeners
+
+emitter.on('event1', () => {
+  // event1 handler
+});
+
+emitter.on('event2', () => {
+  // event2 handler
+});
+
+// ... more event listeners added here
+
+emitter.emit('event1');
+emitter.emit('event2');
+
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`server listen at ${PORT}`))
