@@ -28,7 +28,7 @@
   ## Testing:
   They can fill out the form and add to their project.
   ## Additional Info:
-  - Github: [younges-Raymond](https://github.com/younges-Raymond)
-  - LinkedIn: Younes Raymond
+  - Github: [younges-Raymond](https://github.com/younges-Raymond) , [synxtaxsemantixs](https://github.com/syntaxsemantixs)
+  - LinkedIn: Younes Raymond or Gerardo Ormeno-Vela
   ## Questions:
   For any questions on contributing to the project please reach out to us on Linkedin
