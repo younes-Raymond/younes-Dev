@@ -69,54 +69,99 @@
     <button type="submit" id="submit-article">Submit</button>
   </form>
     
-    <section>
-      <h2>Existing Articles</h2>
-      <ul id="articles-list">
-        <% articles.forEach(function(article) { %>
-          <li>
-            <h3><%= article.title %></h3>
-            <p>Category: <%= article.category %></p>
-            <p><%= article.content %></p>
-          </li>
-        <% }) %>
-      </ul>
-      <div id="articles-container">
-        <!-- list of articles -->
-        <ul id="articles-list">
-            <!-- list of articles will be dynamically added here -->
-          </ul>
-      </div>
-    </section>
+  <section>
+    <h2>Existing Articles</h2>
+    <div id="articles-container">
+      <% articles.forEach(function(article) { %>
+        <div class="article-container">
+          <h3><%= article.title %></h3>
+          <p>Category: <%= article.category %></p>
+          <p><%= article.content %></p>
+          <p>By <%= article.authorName %>, Author Specialisation: <%= article.authorSpecialisation %></p>
+          <hr>
+          <div class="actions-container">
+            <span><img src="images/comment.png" alt="comment" />Comment</span>
+            <span><img src="images/send.png" alt="share" />Send</span>
+            <span><img src="images/like.png" alt="like" />Like</span>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </section>
+  
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       $(document).ready(function() {
+        // function to create HTML for an article
+        function createArticleHTML(article) {
+          return '<div class="article-container"><h3> title: ' + 
+            article.title + '</h3><p>Category of probleme : ' +
+            article.category + '</p><p> solution:' + article.content +
+            '</p><p>By ' + article.authorName + ', Author Specialisation: ' +
+            article.authorSpecialisation + 
+            '</p> <hr> <div class="actions-container"><span><img src="images/comment.png" alt="comment" />Comment</span><span><img src="images/send.png" alt="share" />Send</span><span><img src="images/like.png" alt="like" />Like</span></div></div>';
+        }
+    
+        // get articles from server on page load
+        $.ajax({
+          method: 'GET',
+          url: '/articles',
+          success: function(data) {
+            console.log(data);
+            // loop through articles and append HTML to the container
+            for (var i = 0; i < data.length; i++) {
+              var articleHTML = createArticleHTML(data[i]);
+              $('#articles-container').append(articleHTML);
+            }
+          },
+          error: function(jqXHR, textStatus, errorThrown) {
+            console.log(textStatus, errorThrown);
+          }
+        });
+    
+
+
+        // submit the articles 
         $('#submit-article').on('click', function(event) {
           event.preventDefault();
-          // send  form data using aajax 
+          // send form data using AJAX
           $.ajax({
             method: 'POST',
             url: '/articles',
             data: {
               title: $('#article-title').val(),
               category: $('#article-category').val(),
-              content: $('#article-content').val(),              
-              Author_Name: $('#article-author-name').val(),
-              Author_Specialisation: $('#article-author-specialisation').val(),
-
+              content: $('#article-content').val(),
+              authorName: $('#article-author-name').val(),
+              authorSpecialisation: $('#article-author-specialisation').val(),
             },
             success: function(data) {
-                console.log(data)
-// create HTML for the new article
-var articleHTML ='<div class="article-container"><h3> title: ' + data.title + '</h3><p>Category of probleme : ' + data.category + '</p><p> solution:' + data.content + '</p><p>By ' + data.authorName + ', Author Specialisation: ' + data.authorSpecialisation + '</p> <hr> <div class="actions-container"><img src="images/comment.png" alt="comment" /><img src="images/send.png" alt="share" /><img src="images/like.png" alt="like" /></div></div>';
-
-// append the new article to the list of articles
-$('#articles-container').append(articleHTML);
-        }
+      console.log(data);
+      // create HTML for the new article
+      var articleHTML = '<div class="article-container">' +
+        '<h3>' + data.title + '</h3>' +
+        '<p>Category of probleme : ' + data.category + '</p>' +
+        '<p>Solution: ' + data.content + '</p>' +
+        '<p>By ' + data.authorName + ', Author Specialisation: ' + data.authorSpecialisation + '</p>' +
+        '<hr>' +
+        '<div class="actions-container">' +
+        '<span><img src="images/comment.png" alt="comment" />Comment</span>' +
+        '<span><img src="images/send.png" alt="share" />Send</span>' +
+        '<span><img src="images/like.png" alt="like" />Like</span>' +
+        '</div>' +
+        '</div>';
+      // append the new article to the list of articles
+      $('#articles-container').prepend(articleHTML);
+      $('#article-form')[0].reset();
+    },error: function(jqXHR, textStatus, errorThrown) {
+              console.log(textStatus, errorThrown);
+            }
           });
         });
       });
     </script>
     <script src="source/master.js"></script>
+    
 </body>
 </html>
 

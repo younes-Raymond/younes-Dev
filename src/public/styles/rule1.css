@@ -1359,19 +1359,16 @@ footer .input-form{
     background-color: aqua;
     margin: 4% 0% ;
   }
- 
-.article-container
-  {
-   
-  }
+
   .article-container {
     background-color: var(--main-color);
-    margin: 4% 0%;
+    margin: 4% 10%;
     border-radius: 10px;
     border: 1px solid var(--main-color2);
     display: flex;
     flex-direction: column;
     padding: 20px;
+    width: 80%;
     color: var(--main-color2);
   }
   
@@ -1394,7 +1391,7 @@ footer .input-form{
   
 .actions-container
 {
-margin: 0% 0% 3%;
+margin: 0% 0% 0%;
 background: var(--main-color2);
 width: 100%;
 display: flex;
@@ -1402,21 +1399,26 @@ flex-direction: row;
 justify-content: space-around;
 border-radius: 10px;
 align-items: center;
-
+}
+.actions-container span 
+{
+    width: 27%;
+    color: black;
+    cursor: pointer;
 }
 
-.actions-container img 
+.actions-container span  img 
 {
-width: 10%;
-
+    width: 15%;
+    margin: 0% 20% 0% 0%;
 }
 
 .actions-container img:hover
 {
     padding: 2px;
     cursor: pointer;
-
-
 }
+
+
 
   /* end solution page  */

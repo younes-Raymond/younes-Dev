@@ -18,60 +18,50 @@ app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/')));
 
 
+// 
 app.get('/', (req, res) => {
   res.render('Home');
 });
+
 app.get('/Home', (req, res) => {
   res.render('Home');
 });
 
 
 
-//  the default solution page 
-
-app.get('/solution', function(req, res) {
-  var articles = [  { titlew: 'Article 1', category: 'Node.js' },    { title: 'Article 2', category: 'JavaScript' },    { title: 'Article 3', category: 'CSS' }  ];
-  res.render('solution', { articles: articles });
+app.get('/solution', async function(req, res) {
+  const uri = "mongodb+srv://raymondyounes:cu4yLypyIbmMfL7K@younes-dev.enszkpk.mongodb.net/test";
+  const client = new MongoClient(uri);
+  try {
+    await client.connect();
+    const database = client.db("test2");
+    const articles = await database.collection("articles2").find().sort({ _id: -1 }).toArray(); // if you want to get the last index 
+    // const articles = await database.collection("articles2").find().toArray();
+    console.log(articles) // here i make sure that data is exiiset 
+    res.render('solution', { articles: articles });
+  } catch (err) {
+    console.log(err);
+  } finally {
+    await client.close();
+  }
 });
 
+// add your url string , change the password user name 
 const uri = "mongodb+srv://raymondyounes:cu4yLypyIbmMfL7K@younes-dev.enszkpk.mongodb.net/test";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-// solution page rerieve data from datanbase test2 collection articles2
-// app.get('/solution', function(req, res) {
-//   const db = client.db('test2');
-//   const collection = db.collection('articles2');
-//   collection.findOne({}), function(err, articles) {
-//     if (err) {
-//       console.log('erro inside call back func')
-//       console.error(err);
-//       res.status(500).send('Error reading articles from database');
-//       return;
-//     }
-//     console.log(articles);
-//     res.render('solution', { articles: articles });
-//   };
-
-// });
-
-
-// client.close();
-
-
-
-
+const client = new MongoClient(uri);
 
 
 app.post('/articles', function(req, res) {
   // Extract the article data from the request body
+  // console.log(req.body) // use this loging to make that data comes 
   var title = req.body.title;
   var category = req.body.category;
   var content = req.body.content;
-  var authorName = req.body.Author_Name;
-  var authorSpecialisation = req.body.Author_Specialisation;
-
+  var authorName = req.body.authorName;
+  var authorSpecialisation = req.body.authorSpecialisation;
+    
   // Save the new article to the database
-  
     const db = client.db('test2');
     const collection = db.collection('articles2');
     collection.insertOne({ 
@@ -93,18 +83,11 @@ app.post('/articles', function(req, res) {
     });
   // Return the new article as JSON
   var newArticle = {title:title,category:category,content:content,authorName:authorName,authorSpecialisation:authorSpecialisation};
-  console.log('Returning new article as JSON:', newArticle);
+  // console.log('Returning new article as JSON:', newArticle);
   res.json(newArticle);
 });
 
 // another end point 
-
-
-
-
-
-// Parse incomig form data
-
 
 
 // handle form submission 
@@ -168,6 +151,7 @@ app.post('/submit-form', (req, res) => {
     res.send('Message sent successfully!');
   });
 
+
   const emitter = new EventEmitter();
 
 emitter.setMaxListeners(20); // set max listeners before adding any listeners
@@ -181,7 +165,6 @@ emitter.on('event2', () => {
 });
 
 // ... more event listeners added here
-
 emitter.emit('event1');
 emitter.emit('event2');
 
