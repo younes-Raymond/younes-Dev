@@ -35,16 +35,26 @@ app.get('/solution', async function(req, res) {
   try {
     await client.connect();
     const database = client.db("test2");
-    const articles = await database.collection("articles2").find().sort({ _id: -1 }).toArray(); // if you want to get the last index 
-    // const articles = await database.collection("articles2").find().toArray();
-    console.log(articles) // here i make sure that data is exiiset 
-    res.render('solution', { articles: articles });
+    const articles = await database.collection("articles2").find().sort({ _id: -1 }).toArray();
+    if (articles.length > 0) {
+      res.render('solution', { articles: articles });
+    } else {
+      res.render('solution', { articles: null });
+    }
   } catch (err) {
     console.log(err);
+    res.render('solution', { articles: null });
   } finally {
-    await client.close();
+    // Close the database connection
+    client.close();
   }
 });
+
+
+
+
+
+
 
 // add your url string , change the password user name 
 const uri = "mongodb+srv://raymondyounes:cu4yLypyIbmMfL7K@younes-dev.enszkpk.mongodb.net/test";
@@ -83,7 +93,6 @@ app.post('/articles', function(req, res) {
     });
   // Return the new article as JSON
   var newArticle = {title:title,category:category,content:content,authorName:authorName,authorSpecialisation:authorSpecialisation};
-  // console.log('Returning new article as JSON:', newArticle);
   res.json(newArticle);
 });
 

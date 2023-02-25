@@ -68,10 +68,22 @@
   
     <button type="submit" id="submit-article">Submit</button>
   </form>
-    
-  <section>
-    <h2>Existing Articles</h2>
-    <div id="articles-container">
+
+<!-- start articles from database  -->
+<section>
+  <h2>Existing Articles</h2>
+  <div id="articles-container">
+    <% if (!articles && !timeout) { %>
+      <p>Loading articles...</p>
+      <% var timeout = setTimeout(function() { %>
+        <p>No articles to display</p>
+      <% }, 30000) %>
+    <% } else if (!articles && timeout) { %>
+      <p>No articles to display</p>
+      <% clearTimeout(timeout) %>
+    <% } else if (articles.length === 0) { %>
+      <p>No articles to display</p>
+    <% } else { %>
       <% articles.forEach(function(article) { %>
         <div class="article-container">
           <h3><%= article.title %></h3>
@@ -86,9 +98,12 @@
           </div>
         </div>
       <% }) %>
-    </div>
-  </section>
-  
+    <% } %>
+  </div>
+</section>
+<!-- end articles from database  -->
+
+
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       $(document).ready(function() {
@@ -108,19 +123,22 @@
           url: '/articles',
           success: function(data) {
             console.log(data);
-            // loop through articles and append HTML to the container
-            for (var i = 0; i < data.length; i++) {
+            if (data=== null) {
+              $('#articles-container').append('<p>No articles to display</p>');
+            }else if (data.length === 0) {
+              $('#articles-container').append('<p>No articles to display</p>');
+            }else{
+                // loop through articles and append HTML to the container
+              for (var i = 0; i < data.length; i++) {
               var articleHTML = createArticleHTML(data[i]);
               $('#articles-container').append(articleHTML);
+            }
             }
           },
           error: function(jqXHR, textStatus, errorThrown) {
             console.log(textStatus, errorThrown);
           }
         });
-    
-
-
         // submit the articles 
         $('#submit-article').on('click', function(event) {
           event.preventDefault();
