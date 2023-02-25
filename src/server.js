@@ -30,8 +30,8 @@ app.get('/Home', (req, res) => {
 
 
 app.get('/solution', async function(req, res) {
-  const uri = "mongodb+srv://raymondyounes:cu4yLypyIbmMfL7K@younes-dev.enszkpk.mongodb.net/test";
-  const client = new MongoClient(uri);
+  // const uri = "mongodb+srv://raymondyounes:cu4yLypyIbmMfL7K@younes-dev.enszkpk.mongodb.net/test";
+  const client = new MongoClient(url);
   try {
     await client.connect();
     const database = client.db("test2");
@@ -58,8 +58,8 @@ app.get('/solution', async function(req, res) {
 
 // add your url string , change the password user name 
 const uri = "mongodb+srv://raymondyounes:cu4yLypyIbmMfL7K@younes-dev.enszkpk.mongodb.net/test";
-
-const client = new MongoClient(uri);
+const url = 'mongodb://160.179.179.98:27017/mydatabase';
+const client = new MongoClient(url);
 
 
 app.post('/articles', function(req, res) {
