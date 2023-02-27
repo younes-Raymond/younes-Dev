@@ -67,6 +67,7 @@
     <input type="text" id="article-author-specialisation" name="authorSpecialisation" required placeholder="Enter your specialisation" minlength="5" maxlength="50"><br>
   
     <button type="submit" id="submit-article">Submit</button>
+    <input type="search" name="search" id="search" placeholder="Search"  minlength="5" maxlength="50" >
   </form>
 
 <!-- start articles from database  -->
@@ -77,7 +78,7 @@
       <p>Loading articles...</p>
       <% var timeout = setTimeout(function() { %>
         <p>No articles to display</p>
-      <% }, 30000) %>
+      <% }, 5000) %>
     <% } else if (!articles && timeout) { %>
       <p>No articles to display</p>
       <% clearTimeout(timeout) %>
@@ -89,12 +90,12 @@
           <h3><%= article.title %></h3>
           <p>Category: <%= article.category %></p>
           <p><%= article.content %></p>
-          <p>By <%= article.authorName %>, Author Specialisation: <%= article.authorSpecialisation %></p>
+          <p>By <%= article.authorName %>, Author Specialization: <%= article.authorSpecialization %></p>
           <hr>
           <div class="actions-container">
-            <span><img src="images/comment.png" alt="comment" />Comment</span>
-            <span><img src="images/send.png" alt="share" />Send</span>
-            <span><img src="images/like.png" alt="like" />Like</span>
+            <span><%= article.commentCount %><img src="images/comment.png" alt="comment" />Comment</span>
+            <span><%= article.shareCount %><img src="images/send.png" alt="share" />Share</span>
+            <span class="like-button" data-article-id="<%= article._id %>"><%= article.likeCount %><img src="images/like.png" alt="like" />Like</span>
           </div>
         </div>
       <% }) %>
@@ -104,7 +105,7 @@
 <!-- end articles from database  -->
 
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
       $(document).ready(function() {
         // function to create HTML for an article
@@ -114,10 +115,9 @@
             article.category + '</p><p> solution:' + article.content +
             '</p><p>By ' + article.authorName + ', Author Specialisation: ' +
             article.authorSpecialisation + 
-            '</p> <hr> <div class="actions-container"><span><img src="images/comment.png" alt="comment" />Comment</span><span><img src="images/send.png" alt="share" />Send</span><span><img src="images/like.png" alt="like" />Like</span></div></div>';
+            '</p> <hr> <div class="actions-container"><span><img src="images/comment.png" alt="comment" />Comment</span><span><img src="images/send.png" alt="share" />Send</span><span class="like-button"><img src="images/like.png" alt="like" />Like</span></div></div>';
         }
-    
-        // get articles from server on page load
+      // start get articles from server on page load
         $.ajax({
           method: 'GET',
           url: '/articles',
@@ -134,12 +134,14 @@
               $('#articles-container').append(articleHTML);
             }
             }
-          },
-          error: function(jqXHR, textStatus, errorThrown) {
-            console.log(textStatus, errorThrown);
-          }
+          },error: function(jqXHR, textStatus, errorThrown) {
+  console.log(textStatus, errorThrown);
+  console.log(jqXHR.responseText);
+}       
         });
-        // submit the articles 
+      //end  get articles from server on page load
+
+        // start  submit the articles 
         $('#submit-article').on('click', function(event) {
           event.preventDefault();
           // send form data using AJAX
@@ -152,6 +154,7 @@
               content: $('#article-content').val(),
               authorName: $('#article-author-name').val(),
               authorSpecialisation: $('#article-author-specialisation').val(),
+              clickCount:0 // initilize click count to 0
             },
             success: function(data) {
       console.log(data);
@@ -163,9 +166,9 @@
         '<p>By ' + data.authorName + ', Author Specialisation: ' + data.authorSpecialisation + '</p>' +
         '<hr>' +
         '<div class="actions-container">' +
-        '<span><img src="images/comment.png" alt="comment" />Comment</span>' +
-        '<span><img src="images/send.png" alt="share" />Send</span>' +
-        '<span><img src="images/like.png" alt="like" />Like</span>' +
+        '<span>45<img src="images/comment.png" alt="comment" />Comment</span>' +
+        '<span>40<img src="images/send.png" alt="share" />Send</span>' +
+        '<span class="like-button">44<img src="images/like.png" alt="like" />Like</span>' +
         '</div>' +
         '</div>';
       // append the new article to the list of articles
@@ -177,11 +180,24 @@
           });
         });
       });
+    // end  submit the articles 
+
+    // start the listener of click 
+    const likeButton = document.querySelectorAll('.like-button');
+likeButton.addEventListener('click', function() {
+  alert('im like elemnt ');
+  const articleId = likeButton.dataset.articleId;
+  fetch(`/articles/${articleId}/like`, { method: 'POST' })
+    .then(response => {
+      if (!response.ok) throw new Error('Failed to update like count');
+      console.log('Article like count updated');
+    })
+    .catch(error => {
+      console.error(error);
+    });
+});
+// end the listener of click
     </script>
     <script src="source/master.js"></script>
-    
 </body>
 </html>
-
-
-

@@ -100,7 +100,6 @@ transition: all 1s;
 
 }
 
-
 /* //////////////////////////////////// */
 
 .settings-box  .option-box {
@@ -108,11 +107,8 @@ padding: 10px;
 text-align: center;
 background-color: rgba(221, 21, 124, 0.324);
 margin: 10px;
-margin-top: 20px;
-
-    
+margin-top: 20px;    
 }
-
 .settings-box .option-box h4 {
     margin: 0;
     color: rgb(1, 1, 67);
@@ -138,14 +134,12 @@ margin-top: 20px;
     border-radius: 5px;
     font-weight: bold;
 }
-
-
-.settings-box .option-box .colors-list {
+.settings-box .option-box .colors-list
+{
     list-style: none;
     text-align: center;
     padding: 0;  
     margin: 10px 0 0 ;  
-
 }
 
 .settings-box .option-box .colors-list li {
@@ -183,9 +177,9 @@ margin-top: 20px;
     background-color:#4CAF50;
 }
 
-
 .settings-box .option-box  .yes,
-.settings-box .option-box .no{
+.settings-box .option-box .no
+{
 width: 50px;
 background-color:var(--main-color);
 color: #fff;
@@ -199,7 +193,6 @@ opacity: .6;
 margin-top: 4px;
 text-align: center;
 cursor: pointer;
-
 }
 
 .settings-box .option-box  span.active {
@@ -223,8 +216,8 @@ cursor: pointer;
 }
 /* end settings box */
 
-/* strat calcu  */
 
+/* strat calcu  */
 .show-calcu {
     color: var(--main-color);
     border: none;
@@ -232,7 +225,6 @@ cursor: pointer;
     cursor: pointer;
     border-radius: 7px;
 }
-
 /* end calcu  */
 
 /* start landing page */
@@ -240,9 +232,10 @@ cursor: pointer;
     min-height: 100vh;
     background-image: url('/images/10.jpg');
     background-size: cover;
-  }
+}
 
-.landing-page .overlay{
+.landing-page .overlay
+{
     background-color: rgba(0, 0, 0, .6);
     position: absolute;
     width: 100%;
@@ -252,7 +245,8 @@ cursor: pointer;
     z-index: 1;
 }
 
-.landing-page .container {
+.landing-page .container
+{
     position: relative;
     z-index: 1000;
 }
@@ -289,7 +283,8 @@ cursor: pointer;
 }
 
 
-.header-area .logo:hover{
+.header-area .logo:hover
+{
  height: 60px;
 margin-left: 2px;   
 color: var(--main-color);
@@ -297,35 +292,36 @@ box-shadow: 2px 2px 2px #fff, .1em 0 .4em var(--main-color);
 
 }
 
-.header-area .links-container {
+.header-area .links-container 
+{
     width: 100%;
     text-align: right;
- }
-
-.header-area .links{
+}
+.header-area .links
+{
     list-style: none;
     padding-left: 0;
     width: 100%;
 }
-
-.header-area .links li{
+.header-area .links li
+{
     display: inline-block;
     margin-left: 10px;
 
 }
-
-.header-area .links li a {
+.header-area .links li a 
+{
     color: #fff;
     text-decoration: none;
     transition: .3s;
 }
-
 .header-area .links li a:hover,
-.header-area .links li a.active {
+.header-area .links li a.active 
+{
     color: var(--main-color);
 }
-
-.header-area .toggle-menu {
+.header-area .toggle-menu 
+{
     background-color: transparent;
     border: none;
     width: 40px;
@@ -334,8 +330,8 @@ box-shadow: 2px 2px 2px #fff, .1em 0 .4em var(--main-color);
     display: none;
     position: relative;
 }
-
-.header-area .toggle-menu.menu-active:before {
+.header-area .toggle-menu.menu-active:before
+{
     content: '';
     border-width: 10px;
     border-style: solid;
@@ -346,21 +342,22 @@ box-shadow: 2px 2px 2px #fff, .1em 0 .4em var(--main-color);
 
 
 }
-.header-area .toggle-menu:focus {
+.header-area .toggle-menu:focus 
+{
     outline: none;
     cursor: pointer;
     
 }
-
-
-.span{
+.span
+{
     display: block;
     background-color:var(--main-color);
     height: 3px;
     width: 100%;
     margin-bottom: 4px;  
 }
-.introduction-text {
+.introduction-text
+{
     position: absolute;
     left: 50%;
     top: 50%;
@@ -371,11 +368,8 @@ box-shadow: 2px 2px 2px #fff, .1em 0 .4em var(--main-color);
     width: 95%;
 
 }
-
-
-
-
-.introduction-text h1 {
+.introduction-text h1 
+{
     font-size: 34px;
     margin: 0 0 12px;
     color: #fff;
@@ -1292,7 +1286,7 @@ footer .input-form{
 
 /*  start  solution page  */
 
-/* start the form page ofsolutionpage  */
+/* start the form page of solution page  */
 
 #form-of-article
 {
@@ -1360,7 +1354,8 @@ footer .input-form{
     margin: 4% 0% ;
   }
 
-  .article-container {
+  .article-container
+{
     background-color: var(--main-color);
     margin: 4% 10%;
     border-radius: 10px;
@@ -1372,23 +1367,25 @@ footer .input-form{
     color: var(--main-color2);
   }
   
-  .article-container h3 {
+  .article-container h3
+{
     border-left: 3px solid var(--accent-color);
     padding-left: 10px;
   }
   
-  .article-container p {
+  .article-container p 
+  {
     margin: 10px 0;
   }
   
-  .article-container .author-info {
+  .article-container .author-info
+{
     border-right: 3px solid var(--accent-color);
     padding-right: 10px;
     margin-top: 10px;
     display: flex;
     justify-content: space-between;
-  }
-  
+}
 .actions-container
 {
 margin: 0% 0% 0%;
@@ -1405,20 +1402,17 @@ align-items: center;
     width: 27%;
     color: black;
     cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-
 .actions-container span  img 
 {
     width: 15%;
-    margin: 0% 20% 0% 0%;
 }
-
-.actions-container img:hover
+.actions-container  span img:hover
 {
-    padding: 2px;
     cursor: pointer;
 }
-
-
 
   /* end solution page  */

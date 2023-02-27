@@ -107,18 +107,6 @@ colorsLi.forEach(li => {
 }); // closing tag foreach loop 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
 // switch random background option 
 const randombackel = document.querySelectorAll(".random-backgrounds span");
 
@@ -263,10 +251,6 @@ ourgallery.forEach(img => {
             
 
         }// close if condition 
-
-
-
-
         // creat the images 
         let popupimage = document.createElement("img");
 
@@ -308,10 +292,8 @@ ourgallery.forEach(img => {
         }
     })
 
-
 // select bullet
 const allbullets = document.querySelectorAll(".nav-bullets .bullet");
-
 const alllinks = document.querySelectorAll(".links a");
 function scrolltosomewhere(elements) {
 
@@ -391,10 +373,7 @@ bulletSpan.forEach(span => {
 });
 
 });
-
-
 // reset button 
-
 document.querySelector(".reset-options").onclick = function () {
 
     // localStorage.clear(); // if you want to reset all option
@@ -461,8 +440,6 @@ tlinks.onclick = function (e) {
     const btn_mode = document.querySelector('.toggleButton') 
     //as ModeButton;
     btn_mode.addEventListener('click', toggleDarkMode);
-  
-    
   function toggleDarkMode() {
     const body = document.body;
     if (body.classList.contains('dark-theme')) {

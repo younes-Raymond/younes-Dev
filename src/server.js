@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const express = require('express');
 const ejs = require('ejs');
 const app = express();
@@ -17,8 +18,6 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, '/public')));
 app.use(express.static(path.join(__dirname, '/')));
 
-
-// 
 app.get('/', (req, res) => {
   res.render('Home');
 });
@@ -27,13 +26,11 @@ app.get('/Home', (req, res) => {
   res.render('Home');
 });
 
-
-
 app.get('/solution', async function(req, res) {
-  // const uri = "mongodb+srv://raymondyounes:cu4yLypyIbmMfL7K@younes-dev.enszkpk.mongodb.net/test";
-  const client = new MongoClient(url);
+  const uri = "mongodb+srv://raymondyounes:cu4yLypyIbmMfL7K@younes-dev.enszkpk.mongodb.net/test";
+  const client = new MongoClient(uri);
   try {
-    await client.connect();
+    await client.connect(); 
     const database = client.db("test2");
     const articles = await database.collection("articles2").find().sort({ _id: -1 }).toArray();
     if (articles.length > 0) {
@@ -50,37 +47,33 @@ app.get('/solution', async function(req, res) {
   }
 });
 
-
-
-
-
-
-
 // add your url string , change the password user name 
 const uri = "mongodb+srv://raymondyounes:cu4yLypyIbmMfL7K@younes-dev.enszkpk.mongodb.net/test";
-const url = 'mongodb://160.179.179.98:27017/mydatabase';
-const client = new MongoClient(url);
+const client = new MongoClient(uri);
 
 
 app.post('/articles', function(req, res) {
   // Extract the article data from the request body
-  // console.log(req.body) // use this loging to make that data comes 
+  // console.log(req.body) // use this loging to make sure  that data comes 
   var title = req.body.title;
   var category = req.body.category;
   var content = req.body.content;
   var authorName = req.body.authorName;
   var authorSpecialisation = req.body.authorSpecialisation;
-    
   // Save the new article to the database
     const db = client.db('test2');
     const collection = db.collection('articles2');
-    collection.insertOne({ 
+    collection.insertOne({
       title: title, 
       category: category,
       content: content,
       authorName: authorName,
-      authorSpecialisation: authorSpecialisation
-    }, function(err, result) {
+      authorSpecialisation: authorSpecialisation,
+      likeCount: 0,
+      commentCount: 0,
+      shareCount: 0
+    }, // provide smaa error logs to help understand what happen when inserting data not going well 
+    function(err, result) {
       if (err) {
         console.error(err);
         res.status(500).send('Error saving article to database');
@@ -89,14 +82,42 @@ app.post('/articles', function(req, res) {
       }
       console.log(result);
       console.log("New article inserted into database");
-      client.close();
+      client.close(); // close db connection 
     });
   // Return the new article as JSON
   var newArticle = {title:title,category:category,content:content,authorName:authorName,authorSpecialisation:authorSpecialisation};
   res.json(newArticle);
 });
-
 // another end point 
+
+// Define the route handler for updating the like count
+app.post('/articles/:id/like', (req, res) => {
+  console.log( req.params) // log the value of Id in dataset come from client side 
+  console.log('Request to like article received');
+  const db = client.db('test2');
+  const collection = db.collection('articles2');
+  const articleId = req.params.id;
+  console.log(articleId);
+
+  // Verify that articleId is a valid ObjectId or not i keep to yuo use it in your development proccess 
+  const validObjectIdRegex = /^[0-9a-fA-F]{24}$/; 
+  if (!validObjectIdRegex.test(articleId)) {
+    res.status(400).json({ error: 'Invalid article ID' });
+    return;  
+  }
+
+  collection.updateOne(
+    { _id: new ObjectId(articleId) },
+    { $inc: { likeCount: 1 } }  
+  ).then(() => {
+    // Send a success response to the client
+    res.sendStatus(200);
+  }).catch((error) => {
+    // Send an error response to the client
+    res.status(500).json({ error: error.message });
+  });
+
+});
 
 
 // handle form submission 
@@ -158,8 +179,7 @@ app.post('/submit-form', (req, res) => {
       }
     });
     res.send('Message sent successfully!');
-  });
-
+});
 
   const emitter = new EventEmitter();
 
@@ -173,10 +193,9 @@ emitter.on('event2', () => {
   // event2 handler
 });
 
-// ... more event listeners added here
+// ... more event listeners added here if you have it ! 
 emitter.emit('event1');
 emitter.emit('event2');
-
 
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`server listen at ${PORT}`))
