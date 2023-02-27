@@ -50,6 +50,8 @@ app.get('/solution', async function(req, res) {
 // add your url string , change the password user name 
 const uri = "mongodb+srv://raymondyounes:cu4yLypyIbmMfL7K@younes-dev.enszkpk.mongodb.net/test";
 const client = new MongoClient(uri);
+const db = client.db('test2');
+
 
 
 app.post('/articles', function(req, res) {
@@ -90,9 +92,11 @@ app.post('/articles', function(req, res) {
 });
 // another end point 
 
+
+
 // Define the route handler for updating the like count
 app.post('/articles/:id/like', (req, res) => {
-  console.log( req.params) // log the value of Id in dataset come from client side 
+  console.log(`i got i request from ${req.params.id}`)  // log the value of Id in dataset come from client side 
   console.log('Request to like article received');
   const db = client.db('test2');
   const collection = db.collection('articles2');
@@ -118,6 +122,91 @@ app.post('/articles/:id/like', (req, res) => {
   });
 
 });
+//  start like count router 
+app.get('/articles/:id', async (req, res) => {
+  const articleId = req.params.id;
+  const article = await db.collection("articles2").findOne({_id: new ObjectId(articleId)});
+  if (!article) {
+    res.status(404).send('Article not found');
+    return;
+  }
+  // console.log(article.likeCount);
+  res.status(200).json(article.likeCount);
+})
+// end like count router 
+
+
+
+app.post('/articles/:id/share', async (req, res) => {
+  console.log(`i got i request from ${req.params.id}`)
+  const articleId = req.params.id;
+  await db.collection('articles2').updateOne({_id: new ObjectId(articleId)}, {$inc: {shareCount: 1}});
+  console.log('Request to share article received', articleId);
+  res.status(200).send('Article shared');
+});
+
+// start share count router 
+app.get('/articles/:id', async (req, res) => {
+  const articleId = req.params.id;
+  const article = await db.collection("articles2").findOne({_id: new ObjectId(articleId)});
+  if (!article) {
+    res.status(404).send('Article not found');
+    return;
+  }
+  // console.log(article.shareCount);
+  res.status(200).json(article.shareCount);
+})
+// end share count router 
+
+
+
+
+
+
+app.post('/articles/:id/comment', (req, res) => {
+  console.log(`i got i request from ${req.params.id}`)// log the value of Id in dataset come from client side 
+  console.log('Request to like article received');
+  const db = client.db('test2');
+  const collection = db.collection('articles2');
+  const articleId = req.params.id;
+  console.log(articleId);
+
+  // Verify that articleId is a valid ObjectId or not i keep to yuo use it in your development proccess 
+  const validObjectIdRegex = /^[0-9a-fA-F]{24}$/; 
+  if (!validObjectIdRegex.test(articleId)) {
+    res.status(400).json({ error: 'Invalid article ID' });
+    return;  
+  }
+
+  collection.updateOne(
+    { _id: new ObjectId(articleId) },
+    { $inc: { commentCount: 1 } }  
+  ).then(() => {
+    // Send a success response to the client
+    res.sendStatus(200);
+  }).catch((error) => {
+    // Send an error response to the client
+    res.status(500).json({ error: error.message });
+  });
+
+});
+
+
+//  start comment count router 
+app.get('/articles/:id', async (req, res) => {
+  const articleId = req.params.id;
+  const article = await db.collection("articles2").findOne({_id: new ObjectId(articleId)});
+  if (!article) {
+    res.status(404).send('Article not found');
+    return;
+  }
+  console.log(article.commentCount);
+  res.status(200).json(article.commentCount);
+})
+// end comment count router 
+
+
+
 
 
 // handle form submission 
@@ -193,7 +282,7 @@ emitter.on('event2', () => {
   // event2 handler
 });
 
-// ... more event listeners added here if you have it ! 
+// ... more event listeners added here
 emitter.emit('event1');
 emitter.emit('event2');
 

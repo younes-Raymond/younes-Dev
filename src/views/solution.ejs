@@ -93,9 +93,9 @@
           <p>By <%= article.authorName %>, Author Specialization: <%= article.authorSpecialization %></p>
           <hr>
           <div class="actions-container">
-            <span><%= article.commentCount %><img src="images/comment.png" alt="comment" />Comment</span>
-            <span><%= article.shareCount %><img src="images/send.png" alt="share" />Share</span>
-            <span class="like-button" data-article-id="<%= article._id %>"><%= article.likeCount %><img src="images/like.png" alt="like" />Like</span>
+            <span class="comment-button" data-article-id="<%= article._id %>"><span class="comment-count"><%= article.commentCount %></span><img src="images/comment.png" alt="comment" />Comment</span>
+            <span class="share-button" data-article-id="<%= article._id %>"><span class="share-count"><%= article.shareCount %></span><img src="images/send.png" alt="share" />Share</span>
+            <span class="like-button" data-article-id="<%= article._id %>"><span class="like-count"><%= article.likeCount %></span><img src="images/like.png" alt="like" />Like</span>
           </div>
         </div>
       <% }) %>
@@ -182,21 +182,104 @@
       });
     // end  submit the articles 
 
-    // start the listener of click 
-    const likeButton = document.querySelectorAll('.like-button');
-likeButton.addEventListener('click', function() {
-  alert('im like elemnt ');
-  const articleId = likeButton.dataset.articleId;
-  fetch(`/articles/${articleId}/like`, { method: 'POST' })
-    .then(response => {
-      if (!response.ok) throw new Error('Failed to update like count');
-      console.log('Article like count updated');
-    })
-    .catch(error => {
-      console.error(error);
-    });
+const commentButtons = document.querySelectorAll('.comment-button');
+
+commentButtons.forEach(button => {
+  button.addEventListener('click', function() {
+    alert('hello im here')
+    const articleId = button.dataset.articleId;
+    fetch(`/articles/${articleId}/comment`, { method: 'POST' })
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to share article');
+        console.log('Article shared');
+        // Fetch the updated article data from the server
+        fetch(`/articles/${articleId}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log('Updated article data received:', data);
+            // Update the share count on the page
+            const commentCountElement = button.querySelector('.comment-count');
+            commentCountElement.textContent = data;
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  });
+});
+
+
+// start event listener for share 
+const shareButtons = document.querySelectorAll('.share-button');
+
+shareButtons.forEach(button => {
+  button.addEventListener('click', function() {
+    const articleId = button.dataset.articleId;
+    fetch(`/articles/${articleId}/share`, { method: 'POST' })
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to share article');
+        console.log('Article shared');
+        // Fetch the updated article data from the server
+        fetch(`/articles/${articleId}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log('Updated article data received:', data);
+            // Update the share count on the page
+            const shareCountElement = button.querySelector('.share-count');
+            shareCountElement.textContent = data;
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  });
+});
+//end  event listener for share 
+
+
+// Add a click event listener to each like button
+const likeButtons = document.querySelectorAll('.like-button');
+
+likeButtons.forEach(button => {
+  button.addEventListener('click', function() {
+    // Disable the button to prevent multiple clicks
+    button.classList.add('disabled');
+
+    const articleId = button.dataset.articleId;
+    fetch(`/articles/${articleId}/like`, { method: 'POST' })
+      .then(response => {
+        if (!response.ok) throw new Error('Failed to update like count');
+        console.log('Article like count updated');
+        // Fetch the updated article data from the server
+        fetch(`/articles/${articleId}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log('Update article data received:',data)
+            // Update the like count on the page
+            const likeCountElement = button.querySelector('.like-count');
+            likeCountElement.textContent = data;
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  });
 });
 // end the listener of click
+
+// start share button listener 
+
+// start share button listener 
+
     </script>
     <script src="source/master.js"></script>
 </body>
