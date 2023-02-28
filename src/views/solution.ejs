@@ -186,7 +186,6 @@ const commentButtons = document.querySelectorAll('.comment-button');
 
 commentButtons.forEach(button => {
   button.addEventListener('click', function() {
-    alert('hello im here')
     const articleId = button.dataset.articleId;
     fetch(`/articles/${articleId}/comment`, { method: 'POST' })
       .then(response => {
@@ -196,10 +195,11 @@ commentButtons.forEach(button => {
         fetch(`/articles/${articleId}`)
           .then(response => response.json())
           .then(data => {
-            console.log('Updated article data received:', data);
+            // console.log('Updated article data received:', data);
             // Update the share count on the page
             const commentCountElement = button.querySelector('.comment-count');
-            commentCountElement.textContent = data;
+            commentCountElement.textContent = data.commentCount;
+            console.log(data.commentCount)
           })
           .catch(error => {
             console.error(error);
@@ -226,10 +226,11 @@ shareButtons.forEach(button => {
         fetch(`/articles/${articleId}`)
           .then(response => response.json())
           .then(data => {
-            console.log('Updated article data received:', data);
+            // console.log('Updated article data received:', data);
             // Update the share count on the page
             const shareCountElement = button.querySelector('.share-count');
-            shareCountElement.textContent = data;
+            console.log(data.shareCount)
+            shareCountElement.textContent = data.shareCount;
           })
           .catch(error => {
             console.error(error);
@@ -250,7 +251,6 @@ likeButtons.forEach(button => {
   button.addEventListener('click', function() {
     // Disable the button to prevent multiple clicks
     button.classList.add('disabled');
-
     const articleId = button.dataset.articleId;
     fetch(`/articles/${articleId}/like`, { method: 'POST' })
       .then(response => {
@@ -260,10 +260,11 @@ likeButtons.forEach(button => {
         fetch(`/articles/${articleId}`)
           .then(response => response.json())
           .then(data => {
-            console.log('Update article data received:',data)
+            // console.log('Update article data received:',data)
             // Update the like count on the page
             const likeCountElement = button.querySelector('.like-count');
-            likeCountElement.textContent = data;
+            console.log(data.likeCount)
+            likeCountElement.textContent = data.likeCount;
           })
           .catch(error => {
             console.error(error);

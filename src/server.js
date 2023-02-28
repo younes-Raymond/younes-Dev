@@ -96,7 +96,7 @@ app.post('/articles', function(req, res) {
 
 // Define the route handler for updating the like count
 app.post('/articles/:id/like', (req, res) => {
-  console.log(`i got i request from ${req.params.id}`)  // log the value of Id in dataset come from client side 
+  console.log(`i got i request from like ${req.params.id}`)  // log the value of Id in dataset come from client side 
   console.log('Request to like article received');
   const db = client.db('test2');
   const collection = db.collection('articles2');
@@ -124,6 +124,7 @@ app.post('/articles/:id/like', (req, res) => {
 });
 //  start like count router 
 app.get('/articles/:id', async (req, res) => {
+  console.log(`i send i request from like ${req.params.id}`)// log the value of Id in dataset come from client side 
   const articleId = req.params.id;
   const article = await db.collection("articles2").findOne({_id: new ObjectId(articleId)});
   if (!article) {
@@ -131,14 +132,13 @@ app.get('/articles/:id', async (req, res) => {
     return;
   }
   // console.log(article.likeCount);
-  res.status(200).json(article.likeCount);
+  res.status(200).json(article);
 })
 // end like count router 
 
 
-
 app.post('/articles/:id/share', async (req, res) => {
-  console.log(`i got i request from ${req.params.id}`)
+  console.log(`i got i request from share ${req.params.id}`)
   const articleId = req.params.id;
   await db.collection('articles2').updateOne({_id: new ObjectId(articleId)}, {$inc: {shareCount: 1}});
   console.log('Request to share article received', articleId);
@@ -147,6 +147,8 @@ app.post('/articles/:id/share', async (req, res) => {
 
 // start share count router 
 app.get('/articles/:id', async (req, res) => {
+  console.log(`i got i request from share ${req.params.id}`)// log the value of Id in dataset come from client side 
+
   const articleId = req.params.id;
   const article = await db.collection("articles2").findOne({_id: new ObjectId(articleId)});
   if (!article) {
@@ -154,7 +156,7 @@ app.get('/articles/:id', async (req, res) => {
     return;
   }
   // console.log(article.shareCount);
-  res.status(200).json(article.shareCount);
+  res.status(200).json(article);
 })
 // end share count router 
 
@@ -164,7 +166,7 @@ app.get('/articles/:id', async (req, res) => {
 
 
 app.post('/articles/:id/comment', (req, res) => {
-  console.log(`i got i request from ${req.params.id}`)// log the value of Id in dataset come from client side 
+  console.log(`i got i request from comment ${req.params.id}`)// log the value of Id in dataset come from client side 
   console.log('Request to like article received');
   const db = client.db('test2');
   const collection = db.collection('articles2');
@@ -194,6 +196,7 @@ app.post('/articles/:id/comment', (req, res) => {
 
 //  start comment count router 
 app.get('/articles/:id', async (req, res) => {
+  console.log(`i got i request from comment ${req.params.id}`)// log the value of Id in dataset come from client side 
   const articleId = req.params.id;
   const article = await db.collection("articles2").findOne({_id: new ObjectId(articleId)});
   if (!article) {
@@ -201,7 +204,7 @@ app.get('/articles/:id', async (req, res) => {
     return;
   }
   console.log(article.commentCount);
-  res.status(200).json(article.commentCount);
+  res.status(200).json(article);
 })
 // end comment count router 
 
