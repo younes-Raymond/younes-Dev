@@ -1420,4 +1420,47 @@ align-items: center;
     opacity: 0.5;
     cursor: not-allowed;
   }
+
+  /* start search form */
+.search form 
+{
+    width: 100%;
+    background: var(--main-color);
+    color: var(--main-color2);
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+    height: 60px;
+    border-radius: 0 0  10px 10px;
+}
+.search label 
+{
+    width: 14%;
+}
+#search-input 
+{
+    height: 30px;
+    width: 50%;
+    border: snow;
+    border-radius: 5px;
+}
+.search button 
+{
+    border: snow;
+    width: 15%;
+    height: 30px;
+    cursor: pointer;
+    border-radius:5px;
+
+}.search button:hover{
+    padding: 1px;
+    border: black solid 1px;
+    color: var(--main-color);
+}
+.matching-article {
+    margin: 0;
+    width: 100%;
+  }
+  /* end  search form */
   /* end solution page  */

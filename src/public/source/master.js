@@ -463,4 +463,14 @@ solution.addEventListener('click', () => {
     window.location.href = 'solution'
 })
   
+
+
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-FJ1SETJQGC');
+
+
+
   

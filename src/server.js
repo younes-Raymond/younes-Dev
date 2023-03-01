@@ -55,7 +55,6 @@ const db = client.db('test2');
 
 
 app.post('/articles', function(req, res) {
-  // Extract the article data from the request body
   // console.log(req.body) // use this loging to make sure  that data comes 
   var title = req.body.title;
   var category = req.body.category;
@@ -74,24 +73,26 @@ app.post('/articles', function(req, res) {
       likeCount: 0,
       commentCount: 0,
       shareCount: 0
-    }, // provide smaa error logs to help understand what happen when inserting data not going well 
-    function(err, result) {
-      if (err) {
-        console.error(err);
-        res.status(500).send('Error saving article to database');
-        console.log('data not inserting correctly');
-        return;
-      }
-      console.log(result);
+    }).then(result => {
       console.log("New article inserted into database");
-      client.close(); // close db connection 
-    });
-  // Return the new article as JSON
-  var newArticle = {title:title,category:category,content:content,authorName:authorName,authorSpecialisation:authorSpecialisation};
-  res.json(newArticle);
-});
+      const newArticle = {
+        title: title,
+        category: category,
+        content: content,
+        authorName: authorName,
+        authorSpecialisation: authorSpecialisation,
+        likeCount: 0,
+        commentCount: 0,
+        shareCount: 0,
+        id: result.insertedId
+      };
+      res.json(newArticle);
+    }).catch(error => {
+      console.error(error);
+      res.status(500).send('Error saving article to database');
+    }); 
+})
 // another end point 
-
 
 
 // Define the route handler for updating the like count
@@ -144,26 +145,9 @@ app.post('/articles/:id/share', async (req, res) => {
   console.log('Request to share article received', articleId);
   res.status(200).send('Article shared');
 });
-
 // start share count router 
-app.get('/articles/:id', async (req, res) => {
-  console.log(`i got i request from share ${req.params.id}`)// log the value of Id in dataset come from client side 
 
-  const articleId = req.params.id;
-  const article = await db.collection("articles2").findOne({_id: new ObjectId(articleId)});
-  if (!article) {
-    res.status(404).send('Article not found');
-    return;
-  }
-  // console.log(article.shareCount);
-  res.status(200).json(article);
-})
-// end share count router 
-
-
-
-
-
+ 
 
 app.post('/articles/:id/comment', (req, res) => {
   console.log(`i got i request from comment ${req.params.id}`)// log the value of Id in dataset come from client side 
@@ -207,6 +191,47 @@ app.get('/articles/:id', async (req, res) => {
   res.status(200).json(article);
 })
 // end comment count router 
+
+
+
+
+
+
+
+
+// search bar endpoint 
+app.post('/search', async (req, res) => {
+  let type = req.query.type;
+  let query = req.query.query;
+  console.log(type) // problem 
+  console.log(query) // value of input field come from client side 
+  if (type === 'problem'){
+    type = 'category';
+    const articles = await db.collection('articles2').find({
+      [type]: {
+        $regex: new RegExp(query, 'gi') 
+      }
+    }).toArray();
+    console.log(articles)
+    res.json(articles);
+  } else if (type === 'author') {
+    type = 'authorName';
+    const articles = await db.collection('articles2').find({
+      [type]: {
+        $regex: new RegExp(query, 'gi') 
+      }
+    }).toArray();
+    console.log(articles)
+    res.json(articles);
+  } else {
+    console.error('error')
+  }
+
+});
+
+// search end point
+
+
 
 
 

@@ -67,8 +67,19 @@
     <input type="text" id="article-author-specialisation" name="authorSpecialisation" required placeholder="Enter your specialisation" minlength="5" maxlength="50"><br>
   
     <button type="submit" id="submit-article">Submit</button>
-    <input type="search" name="search" id="search" placeholder="Search"  minlength="5" maxlength="50" >
   </form>
+  <div class="search">
+    <form action="/search" method="get">
+      <label for="search-input">Search for:</label>
+      <input type="text" id="search-input" name="query" placeholder="Type Something...">
+      <select name="type" id="search-type">
+        <option value="problem">Problem</option>
+        <option value="author">Author</option>
+      </select>
+      <button type="submit">Search</button>
+    </form>
+  </div>
+  
 
 <!-- start articles from database  -->
 <section>
@@ -107,40 +118,89 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-      $(document).ready(function() {
-        // function to create HTML for an article
-        function createArticleHTML(article) {
-          return '<div class="article-container"><h3> title: ' + 
-            article.title + '</h3><p>Category of probleme : ' +
-            article.category + '</p><p> solution:' + article.content +
-            '</p><p>By ' + article.authorName + ', Author Specialisation: ' +
-            article.authorSpecialisation + 
-            '</p> <hr> <div class="actions-container"><span><img src="images/comment.png" alt="comment" />Comment</span><span><img src="images/send.png" alt="share" />Send</span><span class="like-button"><img src="images/like.png" alt="like" />Like</span></div></div>';
-        }
-      // start get articles from server on page load
-        $.ajax({
-          method: 'GET',
-          url: '/articles',
-          success: function(data) {
-            console.log(data);
-            if (data=== null) {
-              $('#articles-container').append('<p>No articles to display</p>');
-            }else if (data.length === 0) {
-              $('#articles-container').append('<p>No articles to display</p>');
-            }else{
-                // loop through articles and append HTML to the container
-              for (var i = 0; i < data.length; i++) {
-              var articleHTML = createArticleHTML(data[i]);
-              $('#articles-container').append(articleHTML);
-            }
-            }
-          },error: function(jqXHR, textStatus, errorThrown) {
-  console.log(textStatus, errorThrown);
-  console.log(jqXHR.responseText);
-}       
-        });
-      //end  get articles from server on page load
 
+const searchForm = document.querySelector('.search form');
+const searchInput = searchForm.querySelector('#search-input');
+const searchType = searchForm.querySelector('#search-type');
+
+searchForm.addEventListener('submit', async (e) => {
+  e.preventDefault();
+  
+  const articleContainers = document.querySelectorAll('.article-container')
+  articleContainers.forEach(container => {
+  container.classList.remove('matching-article');
+  })
+  const query = searchInput.value;
+  const type = searchType.value;
+  
+  const response = await fetch(`/search?type=${type}&query=${query}`, { method: 'POST' });
+// after getting the response from the server
+// after getting the response from the server
+if (response.ok) {
+  const articles = await response.json();
+  console.log(articles)
+
+  // get all elements with data-article-id attribute
+  const articleElements = document.querySelectorAll('[data-article-id]');
+ 
+  // loop through each element and check if it matches the search result
+  let matchingArticleElement = null;
+  articleElements.forEach(element => {
+    if (element.dataset.articleId === articles[0]._id) {
+      // highlight the matching article container
+      element.closest('.article-container').classList.add('matching-article');
+      matchingArticleElement = element.closest('.article-container');
+    }
+  });
+  
+  if (articles.length > 0) {
+    // Move the matching article container to the top of the articles container
+    if (matchingArticleElement) {
+      const articlesContainer = document.getElementById('articles-container');
+      articlesContainer.insertBefore(matchingArticleElement, articlesContainer.firstChild);
+    }
+  } else {
+    // Display "No articles found" message
+  }
+} else {
+  // Handle error
+}
+
+
+
+
+  
+});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      $(document).ready(function() {
         // start  submit the articles 
         $('#submit-article').on('click', function(event) {
           event.preventDefault();
@@ -154,34 +214,47 @@
               content: $('#article-content').val(),
               authorName: $('#article-author-name').val(),
               authorSpecialisation: $('#article-author-specialisation').val(),
-              clickCount:0 // initilize click count to 0
             },
             success: function(data) {
-      console.log(data);
+      console.log(data); 
       // create HTML for the new article
-      var articleHTML = '<div class="article-container">' +
-        '<h3>' + data.title + '</h3>' +
-        '<p>Category of probleme : ' + data.category + '</p>' +
-        '<p>Solution: ' + data.content + '</p>' +
-        '<p>By ' + data.authorName + ', Author Specialisation: ' + data.authorSpecialisation + '</p>' +
-        '<hr>' +
-        '<div class="actions-container">' +
-        '<span>45<img src="images/comment.png" alt="comment" />Comment</span>' +
-        '<span>40<img src="images/send.png" alt="share" />Send</span>' +
-        '<span class="like-button">44<img src="images/like.png" alt="like" />Like</span>' +
-        '</div>' +
-        '</div>';
+      var articleHTML = `
+  <div class="article-container">
+    <h3>${data.title}</h3>
+    <p>Category of problem: ${data.category}</p>
+    <p>Solution: ${data.content}</p>
+    <p>By ${data.authorName}, Author Specialisation: ${data.authorSpecialisation}</p>
+    <hr>
+    <div class="actions-container">
+      <span class="comment-button" data-article-id="${data.id}">
+        <span class="comment-count">${data.commentCount}</span>
+        <img src="images/comment.png" alt="comment" />
+        Comment
+      </span>
+      <span class="share-button" data-article-id="${data.id}">
+        <span class="share-count">${data.shareCount}</span>
+        <img src="images/send.png" alt="share" />
+        Share
+      </span>
+      <span class="like-button" data-article-id="${data.id}">
+        <span class="like-count">${data.likeCount}</span>
+        <img src="images/like.png" alt="like" />
+        Like
+      </span>
+    </div>
+  </div>
+`;// Here, we're using the `${}` syntax to insert the values of `data.commentCount`, `data.shareCount`, and `data.likeCount` in the appropriate places in the HTML string. if you aren't familliare with this syntax you can check this link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Template_literals
+
       // append the new article to the list of articles
       $('#articles-container').prepend(articleHTML);
       $('#article-form')[0].reset();
+
     },error: function(jqXHR, textStatus, errorThrown) {
               console.log(textStatus, errorThrown);
             }
           });
         });
-      });
     // end  submit the articles 
-
 const commentButtons = document.querySelectorAll('.comment-button');
 
 commentButtons.forEach(button => {
@@ -249,6 +322,7 @@ const likeButtons = document.querySelectorAll('.like-button');
 
 likeButtons.forEach(button => {
   button.addEventListener('click', function() {
+    alert('im here ')
     // Disable the button to prevent multiple clicks
     button.classList.add('disabled');
     const articleId = button.dataset.articleId;
@@ -260,7 +334,7 @@ likeButtons.forEach(button => {
         fetch(`/articles/${articleId}`)
           .then(response => response.json())
           .then(data => {
-            // console.log('Update article data received:',data)
+            console.log('Update article data received:',data)
             // Update the like count on the page
             const likeCountElement = button.querySelector('.like-count');
             console.log(data.likeCount)
@@ -275,11 +349,10 @@ likeButtons.forEach(button => {
       });
   });
 });
-// end the listener of click
 
-// start share button listener 
+});
 
-// start share button listener 
+
 
     </script>
     <script src="source/master.js"></script>
