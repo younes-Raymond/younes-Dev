@@ -28,14 +28,20 @@
             </ul>
         </div>
         <div class="option-box">
+          <h4>Dark_Mode</h4>
+          <div class="bullets-option">
+            <span class="yes active" data-display="show">yes</span>
+            <span class="no" data-display="hide">no</span>
+           </div>
+        </div>
+        <div class="option-box" style="display: none;">
             <h4>CHANGE Background </h4>
            <div class="random-backgrounds">
             <span class="yes active" data-background="yes">yes</span>
             <span class="no" data-background="no">no</span>
            </div>
-           
         </div>
-        <div class="option-box">
+        <div class="option-box" style="display: none;">
             <h4>show bullets</h4>
            <div class="bullets-option">
             <span class="yes active" data-display="show">yes</span>
@@ -49,6 +55,7 @@
 </div>
     <!-- end setting box -->
 
+      <!-- start articles form -->
   <form method="post" action="/articles" id="form-of-article">
     <h2>Create a New Article</h2>
     <label for="article-title">Title:</label>
@@ -68,6 +75,8 @@
   
     <button type="submit" id="submit-article">Submit</button>
   </form>
+  <!-- end articles form -->
+  <!-- start search form -->
   <div class="search">
     <form action="/search" method="get">
       <label for="search-input">Search for:</label>
@@ -79,8 +88,7 @@
       <button type="submit">Search</button>
     </form>
   </div>
-  
-
+    <!-- end  search form -->
 <!-- start articles from database  -->
 <section>
   <h2>Existing Articles</h2>
@@ -108,6 +116,14 @@
             <span class="share-button" data-article-id="<%= article._id %>"><span class="share-count"><%= article.shareCount %></span><img src="images/send.png" alt="share" />Share</span>
             <span class="like-button" data-article-id="<%= article._id %>"><span class="like-count"><%= article.likeCount %></span><img src="images/like.png" alt="like" />Like</span>
           </div>
+          <div id="comments-container-<%= article._id %>" class="comments-container">
+            <form id="comment-form-<%= article._id %>" class="comment-form">
+              <label for="comment">Comment:</label>
+              <textarea id="comment-<%= article._id %>" name="comment" required></textarea>
+              <button type="submit">Submit</button>
+            </form>
+            <ul id="comment-list-<%= article._id %>"></ul>
+          </div>
         </div>
       <% }) %>
     <% } %>
@@ -118,6 +134,7 @@
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
+
 
 const searchForm = document.querySelector('.search form');
 const searchInput = searchForm.querySelector('#search-input');
@@ -134,7 +151,6 @@ searchForm.addEventListener('submit', async (e) => {
   const type = searchType.value;
   
   const response = await fetch(`/search?type=${type}&query=${query}`, { method: 'POST' });
-// after getting the response from the server
 // after getting the response from the server
 if (response.ok) {
   const articles = await response.json();
@@ -165,41 +181,7 @@ if (response.ok) {
 } else {
   // Handle error
 }
-
-
-
-
-  
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
       $(document).ready(function() {
         // start  submit the articles 
         $('#submit-article').on('click', function(event) {
@@ -255,37 +237,90 @@ if (response.ok) {
           });
         });
     // end  submit the articles 
-const commentButtons = document.querySelectorAll('.comment-button');
 
+
+
+const commentButtons = document.querySelectorAll('.comment-button');
 commentButtons.forEach(button => {
+
   button.addEventListener('click', function() {
     const articleId = button.dataset.articleId;
-    fetch(`/articles/${articleId}/comment`, { method: 'POST' })
-      .then(response => {
-        if (!response.ok) throw new Error('Failed to share article');
-        console.log('Article shared');
-        // Fetch the updated article data from the server
-        fetch(`/articles/${articleId}`)
+    const commentsContainer = document.querySelector(`#comments-container-${articleId}`);
+
+    if (commentsContainer.style.display === 'none') {
+      // If the comments container is hidden, show it
+      commentsContainer.style.display = 'block';
+    } else {
+      // If the comments container is shown, hide it
+      commentsContainer.style.display = 'none';
+    }
+    
+    const commentForm = commentsContainer.querySelector('form');
+    const commentList = commentsContainer.querySelector('ul');
+
+    
+    // Fetch the updated article data from the server
+    fetch(`/articles/${articleId}`)
           .then(response => response.json())
           .then(data => {
-            // console.log('Updated article data received:', data);
-            // Update the share count on the page
+          //   console.log(data)        
+          //  console.log(data.comments)
+
+ // Update the comment list on the page 
+ const commentListElement = document.querySelector(`#comment-list-${articleId}`);
+    commentListElement.innerHTML = '';
+    data.comments.forEach(comment => {
+      const commentListItem = document.createElement('li');
+      commentListItem.textContent = comment;
+      commentListElement.appendChild(commentListItem);
+    });
+
+  }).catch(error => {
+console.error(error);
+  });
+
+
+      
+    commentForm.addEventListener('submit', function(event) {
+      event.preventDefault();
+      const commentInput = commentForm.querySelector('textarea');
+      const commentText = commentInput.value;
+   
+            const commentListItem = document.createElement('li');
+            commentListItem.textContent = commentText;
+            commentList.appendChild(commentListItem);
+       // Only send the request to the server if there is a comment to submit
+  if (commentText.trim()) {
+       // Update the comment count on the page
+
+    const data = {comments:commentText }; // Create an object with the comment text
+    console.log(data)
+    fetch(`/articles/${articleId}/comment`, {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify(data),
+}) .then(response => {
+        if (!response.ok) throw new Error('Failed to submit comment');
+        console.log('Comment submitted successfully');
+      })
+
+      fetch(`/articles/${articleId}`)
+          .then(response => response.json())
+          .then(data => {
+            console.log(data)
             const commentCountElement = button.querySelector('.comment-count');
             commentCountElement.textContent = data.commentCount;
-            console.log(data.commentCount)
+            console.log(data.commentCount);
           })
-          .catch(error => {
-            console.error(error);
-          });
-      })
       .catch(error => {
         console.error(error);
       });
-  });
+  }
+  commentInput.value = ''; // Clear the comment input field    
+  })
+})       
 });
 
-
-// start event listener for share 
 const shareButtons = document.querySelectorAll('.share-button');
 
 shareButtons.forEach(button => {
@@ -322,7 +357,6 @@ const likeButtons = document.querySelectorAll('.like-button');
 
 likeButtons.forEach(button => {
   button.addEventListener('click', function() {
-    alert('im here ')
     // Disable the button to prevent multiple clicks
     button.classList.add('disabled');
     const articleId = button.dataset.articleId;
@@ -349,11 +383,7 @@ likeButtons.forEach(button => {
       });
   });
 });
-
 });
-
-
-
     </script>
     <script src="source/master.js"></script>
 </body>

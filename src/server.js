@@ -10,6 +10,8 @@ const nodemailer = require('nodemailer');
 const { MongoClient } = require('mongodb');
 const $ = require('jquery');
 const path = require('path');
+app.use(express.json());
+app.use(bodyParser.json());
 const { error } = require('console');
 const XMLHttpRequest = require('xmlhttprequest').XMLHttpRequest;
 app.use(express.json());
@@ -54,6 +56,7 @@ const db = client.db('test2');
 
 
 
+
 app.post('/articles', function(req, res) {
   // console.log(req.body) // use this loging to make sure  that data comes 
   var title = req.body.title;
@@ -72,7 +75,8 @@ app.post('/articles', function(req, res) {
       authorSpecialisation: authorSpecialisation,
       likeCount: 0,
       commentCount: 0,
-      shareCount: 0
+      shareCount: 0,
+      comments:[] // initialize the comment  array 
     }).then(result => {
       console.log("New article inserted into database");
       const newArticle = {
@@ -84,8 +88,10 @@ app.post('/articles', function(req, res) {
         likeCount: 0,
         commentCount: 0,
         shareCount: 0,
-        id: result.insertedId
+        id: result.insertedId,
+        comments:[]
       };
+      console.log(newArticle)
       res.json(newArticle);
     }).catch(error => {
       console.error(error);
@@ -150,23 +156,23 @@ app.post('/articles/:id/share', async (req, res) => {
  
 
 app.post('/articles/:id/comment', (req, res) => {
+  console.log(req.body); // check if req come and what this req contain 
   console.log(`i got i request from comment ${req.params.id}`)// log the value of Id in dataset come from client side 
   console.log('Request to like article received');
   const db = client.db('test2');
   const collection = db.collection('articles2');
   const articleId = req.params.id;
-  console.log(articleId);
 
-  // Verify that articleId is a valid ObjectId or not i keep to yuo use it in your development proccess 
+  // Verify that articleId is a valid ObjectId or not i keep it to you use it in your development proccess 
   const validObjectIdRegex = /^[0-9a-fA-F]{24}$/; 
   if (!validObjectIdRegex.test(articleId)) {
     res.status(400).json({ error: 'Invalid article ID' });
     return;  
   }
-
+  const newcomment = req.body.comments;
   collection.updateOne(
     { _id: new ObjectId(articleId) },
-    { $inc: { commentCount: 1 } }  
+    { $push: { comments: newcomment}, $inc: { commentCount: 1 } } // increment the commentCount field by 1
   ).then(() => {
     // Send a success response to the client
     res.sendStatus(200);
@@ -174,7 +180,6 @@ app.post('/articles/:id/comment', (req, res) => {
     // Send an error response to the client
     res.status(500).json({ error: error.message });
   });
-
 });
 
 
@@ -191,13 +196,6 @@ app.get('/articles/:id', async (req, res) => {
   res.status(200).json(article);
 })
 // end comment count router 
-
-
-
-
-
-
-
 
 // search bar endpoint 
 app.post('/search', async (req, res) => {
@@ -218,7 +216,7 @@ app.post('/search', async (req, res) => {
     type = 'authorName';
     const articles = await db.collection('articles2').find({
       [type]: {
-        $regex: new RegExp(query, 'gi') 
+        $regex: new RegExp(query, 'gi')
       }
     }).toArray();
     console.log(articles)
@@ -230,12 +228,6 @@ app.post('/search', async (req, res) => {
 });
 
 // search end point
-
-
-
-
-
-
 
 // handle form submission 
 app.post('/submit-form', (req, res) => {
