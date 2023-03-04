@@ -19,6 +19,7 @@
     <div class="settings-content">
         <div class="option-box">
             <h4>colors</h4>
+
             <ul class="colors-list">
                 <li class="active" data-color="#FF9800"></li>
                 <li data-color="#E91E63"></li>
@@ -97,7 +98,7 @@
       <p>Loading articles...</p>
       <% var timeout = setTimeout(function() { %>
         <p>No articles to display</p>
-      <% }, 5000) %>
+      <% }, 3000) %>
     <% } else if (!articles && timeout) { %>
       <p>No articles to display</p>
       <% clearTimeout(timeout) %>
@@ -113,7 +114,16 @@
           <hr>
           <div class="actions-container">
             <span class="comment-button" data-article-id="<%= article._id %>"><span class="comment-count"><%= article.commentCount %></span><img src="images/comment.png" alt="comment" />Comment</span>
-            <span class="share-button" data-article-id="<%= article._id %>"><span class="share-count"><%= article.shareCount %></span><img src="images/send.png" alt="share" />Share</span>
+            <span class="share-button" data-article-id="<%= article._id %>">
+            <span class="share-count"><%= article.shareCount %></span><img src="images/send.png" alt="share" />Share</span>
+            <div class="share-container">
+              <div class="share-buttons">
+                  <a class="facebook" target="_blank"><i class="fab fa-facebook"></i></a>
+                  <a class="twitter" target="_blank"><i class="fab fa-twitter"></i></a>
+                  <a class="linkedin" target="_blank"><i class="fab fa-linkedin"></i></a>
+                  <a class="reddit" target="_blank"><i class="fab fa-reddit"></i></a>
+              </div>
+          </div>       
             <span class="like-button" data-article-id="<%= article._id %>"><span class="like-count"><%= article.likeCount %></span><img src="images/like.png" alt="like" />Like</span>
           </div>
           <div id="comments-container-<%= article._id %>" class="comments-container">
@@ -322,32 +332,81 @@ console.error(error);
 });
 
 const shareButtons = document.querySelectorAll('.share-button');
+const sharesContainer = document.querySelector('.share-container');
 
+  
 shareButtons.forEach(button => {
-  button.addEventListener('click', function() {
-    const articleId = button.dataset.articleId;
-    fetch(`/articles/${articleId}/share`, { method: 'POST' })
-      .then(response => {
-        if (!response.ok) throw new Error('Failed to share article');
-        console.log('Article shared');
-        // Fetch the updated article data from the server
-        fetch(`/articles/${articleId}`)
-          .then(response => response.json())
-          .then(data => {
-            // console.log('Updated article data received:', data);
-            // Update the share count on the page
-            const shareCountElement = button.querySelector('.share-count');
-            console.log(data.shareCount)
-            shareCountElement.textContent = data.shareCount;
-          })
-          .catch(error => {
-            console.error(error);
-          });
+  button.addEventListener('click', function(event) {
+    if (sharesContainer.style.display === 'none') {
+      // If the comments container is hidden, show it
+      sharesContainer.style.display = 'block';
+    } else {
+      // If the comments container is shown, hide it
+      sharesContainer.style.display = 'none';
+    }
+const link = 'https://younes-dev.onrender.com/solution'                                   //encodeURI(window.location.href);
+
+ const msg = encodeURIComponent('Hey , I found this article')
+ const title = encodeURIComponent(document.querySelector('title').textContent);
+ console.log([link , msg, title]);
+
+ // facebook url 
+ const fb = document.querySelector('.facebook');
+ fb.href = `https://www.facebook.com/share.php?u=${link}`;
+
+ // twitter url
+const twitter = document.querySelector('.twitter');
+twitter.href = `http://twitter.com/share?&url=${link}&text=${msg}&hashtags=javascript`;
+
+// linkedin url 
+const linkedin = document.querySelector('.linkedin');
+linkedin.href = `https://www.linkedin.com/sharing/share-offsite/?url=${link}`;
+
+// reddit url 
+const reddit = document.querySelector('.reddit');
+reddit.href = `http://www.reddit.com/submit?url=${link}&title=${title}`;
+
+let shareButtonClicked = false;
+
+sharesContainer.addEventListener('click', function(e) {
+  if (shareButtonClicked) {
+    return;
+  }
+
+  shareButtonClicked = true;
+
+  const articleId = button.dataset.articleId;
+
+  fetch(`/articles/${articleId}/share`, { method: 'POST' })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to share article');
+      }
+      console.log('Article shared');
+
+      response.json().then(data => {
+        console.log('Updated article data received:', data);       
+        const shareCountElement = button.querySelector('.share-count');
+        data.shareCount -= 1;
+        shareCountElement.textContent = data.shareCount;
+        
       })
       .catch(error => {
-        console.error(error);
+        console.error('Error parsing JSON response:', error);
+      })
+      .finally(() => {
+        shareButtonClicked = false;
       });
-  });
+    })
+    .catch(error => {
+      console.error('Error sharing article:', error);
+      shareButtonClicked = false;
+    });
+
+});
+
+
+});
 });
 //end  event listener for share 
 
@@ -383,7 +442,11 @@ likeButtons.forEach(button => {
       });
   });
 });
+
 });
+
+
+
     </script>
     <script src="source/master.js"></script>
 </body>

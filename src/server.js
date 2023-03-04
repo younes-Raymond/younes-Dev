@@ -28,6 +28,9 @@ app.get('/Home', (req, res) => {
   res.render('Home');
 });
 
+app.get('/share', (req, res) => {
+  res.render('share');
+});
 app.get('/solution', async function(req, res) {
   const uri = "mongodb+srv://raymondyounes:cu4yLypyIbmMfL7K@younes-dev.enszkpk.mongodb.net/test";
   const client = new MongoClient(uri);
@@ -149,12 +152,18 @@ app.post('/articles/:id/share', async (req, res) => {
   const articleId = req.params.id;
   await db.collection('articles2').updateOne({_id: new ObjectId(articleId)}, {$inc: {shareCount: 1}});
   console.log('Request to share article received', articleId);
-  res.status(200).send('Article shared');
+  
+  // Fetch the updated article data from the server
+  const updatedArticle = await db.collection("articles2").findOne({_id: new ObjectId(articleId)});
+  if (!updatedArticle) {
+    res.status(404).send('Article not found');
+    return;
+  }
+console.log(updatedArticle)
+  res.status(200).json(updatedArticle);
 });
+
 // start share count router 
-
- 
-
 app.post('/articles/:id/comment', (req, res) => {
   console.log(req.body); // check if req come and what this req contain 
   console.log(`i got i request from comment ${req.params.id}`)// log the value of Id in dataset come from client side 
