@@ -331,40 +331,91 @@ console.error(error);
 })       
 });
 
-const shareButtons = document.querySelectorAll('.share-button');
-const sharesContainer = document.querySelector('.share-container');
 
-  
-shareButtons.forEach(button => {
+const shareButton = document.querySelectorAll('.share-button');
+
+shareButton.forEach(button => {
   button.addEventListener('click', function(event) {
-    if (sharesContainer.style.display === 'none') {
+    // find the closest articles com=ntainer 
+    const articlesContainer = this.closest('.article-container');
+
+    //find the share-container that belongs to the article 
+    const sharesContainer = articlesContainer.querySelector('.share-container')
+
+    if ( sharesContainer && sharesContainer.style.display === 'none') {
       // If the comments container is hidden, show it
       sharesContainer.style.display = 'block';
     } else {
       // If the comments container is shown, hide it
       sharesContainer.style.display = 'none';
     }
-const link = 'https://younes-dev.onrender.com/solution'                                   //encodeURI(window.location.href);
 
- const msg = encodeURIComponent('Hey , I found this article')
- const title = encodeURIComponent(document.querySelector('title').textContent);
- console.log([link , msg, title]);
+  // find all the anchor tags inside the share container
+  const shareAnchors = sharesContainer.querySelectorAll('.share-buttons a');
+  // set the href attribute for each anchor tag
+  shareAnchors.forEach(anchor => {
+    const link = 'https://younes-dev.onrender.com/solution';
+    const title = encodeURIComponent(document.querySelector('title').textContent);
+    let msg;
+    switch(anchor.classList[0]) {
+      case 'facebook':
+        anchor.href = `https://www.facebook.com/share.php?u=${link}`;
+        break;
+      case 'twitter':
+        msg = encodeURIComponent('Hey, I found this article');
+        anchor.href = `http://twitter.com/share?&url=${link}&text=${msg}&hashtags=javascript`;
+        break;
+      case 'linkedin':
+        anchor.href = `https://www.linkedin.com/sharing/share-offsite/?url=${link}`;
+        break;
+      case 'reddit':
+        anchor.href = `http://www.reddit.com/submit?url=${link}&title=${title}`;
+        break;
+    }
+  });
 
- // facebook url 
- const fb = document.querySelector('.facebook');
- fb.href = `https://www.facebook.com/share.php?u=${link}`;
 
- // twitter url
-const twitter = document.querySelector('.twitter');
-twitter.href = `http://twitter.com/share?&url=${link}&text=${msg}&hashtags=javascript`;
 
-// linkedin url 
-const linkedin = document.querySelector('.linkedin');
-linkedin.href = `https://www.linkedin.com/sharing/share-offsite/?url=${link}`;
 
-// reddit url 
-const reddit = document.querySelector('.reddit');
-reddit.href = `http://www.reddit.com/submit?url=${link}&title=${title}`;
+
+
+
+
+
+
+
+
+
+// const shareAnchor = sharesContainer.querySelectorAll('.share-buttons a');
+
+// shareButton.forEach(button => {
+//   // find the share container for this article 
+//   const shareContainer = button.closest('share-container');
+
+//   //find all the anchor tags inside the share container 
+// })
+// const link = 'https://younes-dev.onrender.com/solution'                                   //encodeURI(window.location.href);
+
+//  const msg = encodeURIComponent('Hey , I found this article')
+//  const title = encodeURIComponent(document.querySelector('title').textContent);
+//  console.log([link , msg, title]);
+
+//  // facebook url 
+//  const fb = document.querySelector('.facebook');
+//  fb.href = `https://www.facebook.com/share.php?u=${link}`;
+
+//  // twitter url
+// const twitter = document.querySelector('.twitter');
+// twitter.href = `http://twitter.com/share?&url=${link}&text=${msg}&hashtags=javascript`;
+
+// // linkedin url 
+// const linkedin = document.querySelector('.linkedin');
+// linkedin.href = `https://www.linkedin.com/sharing/share-offsite/?url=${link}`;
+
+// // reddit url 
+// const reddit = document.querySelector('.reddit');
+// reddit.href = `http://www.reddit.com/submit?url=${link}&title=${title}`;
+
 
 let shareButtonClicked = false;
 
@@ -404,12 +455,10 @@ sharesContainer.addEventListener('click', function(e) {
     });
 
 });
-
-
 });
 });
+
 //end  event listener for share 
-
 
 // Add a click event listener to each like button
 const likeButtons = document.querySelectorAll('.like-button');
