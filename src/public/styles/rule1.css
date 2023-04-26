@@ -230,7 +230,7 @@ cursor: pointer;
 /* start landing page */
 .landing-page{
     min-height: 100vh;
-    background-image: url('/images/10.jpg');
+    background-image: url('https://res.cloudinary.com/dktkavyr3/image/upload/v1682451176/vn5j1wogfzzgyxr3jstv.jpg');
     background-size: cover;
 }
 
@@ -274,13 +274,15 @@ cursor: pointer;
     height: 60px;
     padding: 17px;
     background-size: cover;
-
     font-weight: bold;
     color: #fff;
     cursor: pointer;
     transition: all 1s;
     justify-content: space-between;
 }
+.hide {
+    display: none;
+  }
 
 
 .header-area .logo:hover
@@ -405,12 +407,14 @@ box-shadow: 2px 2px 2px #fff, .1em 0 .4em var(--main-color);
         width: 100%;
         border-radius: 4px;
         text-align: left;
-         
+    }
+    .conatiner-embed {
+        margin-top: -35%;
     }
 
     .header-area .links.open li {
         display: block;
-        margin-left: 10px;
+        margin-left: 40px;
     }
 
     .header-area .links.links.open li a {
@@ -534,7 +538,27 @@ box-shadow: 2px 2px 2px #fff, .1em 0 .4em var(--main-color);
     cursor: pointer;
     width: 300px;
 }
-/* 
+.social-media-link{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    height: 40;
+    box-shadow: var(--main-shadow);
+}
+.social-media-link .wt {
+    color: green;
+  }
+  
+  .social-media-link .fb{ 
+    color: blue;
+  }
+  
+  .social-media-link .lnk {
+    color: #03A9F4;
+  }
+
+
 
 /* start location */
 .mapouter {
@@ -787,6 +811,10 @@ box-shadow: 2px 2px 2px #fff, .1em 0 .4em var(--main-color);
     padding-bottom: 50px;
     background-color: #EEE;
 }
+.timeline  h2 
+{
+    text-align: center;
+}
 
 .timeline .timeline-content {
     position: relative;
@@ -946,6 +974,17 @@ box-shadow: 2px 2px 2px #fff, .1em 0 .4em var(--main-color);
     color: var(--main-color);
     margin: 0 0 60px;
     text-align: center;
+}
+.feat-box img {
+    width: 100%;
+    border-radius: 50%;
+}
+.feat-box img:last-of-type {
+    border-radius: 0;
+  }
+.feat-box:hover{
+    padding: 20px;
+    cursor: pointer;
 }
 
 .features .feat-box {
@@ -1169,7 +1208,7 @@ iframe {
 /* start footer */
 .footer1 {
     background-color: var(--main-color);
-    color: #333;
+    /* color: #333; */
     padding: 10px;
     text-align: left;
     top: 20px;
@@ -1191,7 +1230,7 @@ iframe {
     font-weight: bold;
     text-align: center;
     justify-content: space-between;
-    color: rgb(175, 171, 171);
+    /* color: rgb(175, 171, 171); */
     font-size: 20px;
 
 

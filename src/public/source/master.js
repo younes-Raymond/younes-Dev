@@ -144,20 +144,19 @@ randombackel.forEach(span => {
 let landingpage = document.querySelector(".landing-page");
 
 // get array of images 
-let imagearray  = ["01.jpg","02.webp","03.jpg","04.jpg","05.jpeg","06.webp","07.jpeg","08.jpg","09.jpg","10.jpg"];
-
-// // random background option
-
-// let backgrondoption = true;
-
-// // variable to controle the interval 
-
-// let backgrondinterval;
-
-
-
-// function to randomize images 
-function randomizeimages () {
+// let imagearray  = ["01.jpg","02.webp","03.jpg","04.jpg","05.jpeg","06.webp","07.jpeg","08.jpg","09.jpg","10.jpg"];
+let imagearray = [
+    "https://res.cloudinary.com/dktkavyr3/image/upload/v1682450200/inasAlu/IMG_20230413_141917_xpnpkj.jpg",
+    "https://res.cloudinary.com/dktkavyr3/image/upload/v1682451176/vn5j1wogfzzgyxr3jstv.jpg",
+    "https://res.cloudinary.com/dktkavyr3/image/upload/v1682450192/inasAlu/FB_IMG_1681344334427_t35a2g.jpg",
+    "https://res.cloudinary.com/dktkavyr3/image/upload/v1682450211/inasAlu/IMG-20210526-WA0023_pm4zqi.jpg",
+    "https://res.cloudinary.com/dktkavyr3/image/upload/v1682450210/inasAlu/IMG-20230401-WA0004_rttvct.jpg",
+    "https://res.cloudinary.com/dktkavyr3/image/upload/v1682450210/inasAlu/IMG-20230404-WA0010_apv1kk.jpg",
+    "https://res.cloudinary.com/dktkavyr3/image/upload/v1682450210/inasAlu/IMG-20230404-WA0010_apv1kk.jpg",
+    "https://res.cloudinary.com/dktkavyr3/image/upload/v1682450200/inasAlu/IMG_20230413_141917_xpnpkj.jpg",
+    "https://res.cloudinary.com/dktkavyr3/image/upload/v1682450210/inasAlu/IMG-20230401-WA0004_rttvct.jpg",
+  ];
+  function randomizeimages () {
 
     if (backgrondoption === true){
 
@@ -165,15 +164,14 @@ function randomizeimages () {
             // get random number 
             let randomnumber = Math.floor(Math.random() * imagearray.length);
 
-        // change background url 
-            landingpage.style.backgroundImage = 'url("/images/' + imagearray[randomnumber] + '")';
-        
+            // change background url 
+            landingpage.style.backgroundImage = 'url("' + imagearray[randomnumber] + '")';
+
         }, 10000);
     }
 }
 
 randomizeimages();
-
 
 
 // start progress skills . selector
@@ -292,6 +290,8 @@ ourgallery.forEach(img => {
         }
     })
 
+
+   
 // select bullet
 const allbullets = document.querySelectorAll(".nav-bullets .bullet");
 const alllinks = document.querySelectorAll(".links a");
@@ -384,9 +384,9 @@ document.querySelector(".reset-options").onclick = function () {
     // reload window 
     window.location.reload();
 }
-
 let togglebtn = document.querySelector(".toggle-menu");
 let tlinks = document.querySelector(".links");
+let logo = document.querySelector("#replace-logo");
 
 togglebtn.onclick = function () {
 
@@ -396,6 +396,8 @@ togglebtn.onclick = function () {
     //toggle class "open on links " 
     tlinks.classList.toggle("open");
 
+    // toggle class "hide" on logo
+    logo.classList.toggle("hide");
 };
 
 // click anywhere outside menu and toggle button 
@@ -409,13 +411,45 @@ document.addEventListener("click", (e) => {
 
         // toggle class "menu-active" on button 
         togglebtn.classList.toggle("menu-active");
-
         //toggle class "open on links " 
         tlinks.classList.toggle("open");
 
+        // remove class "hide" from logo
+        logo.classList.remove("hide");
         }
     }
 });
+
+// let togglebtn = document.querySelector(".toggle-menu");
+// let tlinks = document.querySelector(".links");
+
+// togglebtn.onclick = function () {
+
+//     // toggle class "menu-active" on button 
+//     this.classList.toggle("menu-active");
+
+//     //toggle class "open on links " 
+//     tlinks.classList.toggle("open");
+
+// };
+
+// // click anywhere outside menu and toggle button 
+// document.addEventListener("click", (e) => {
+
+//     if (e.target !== togglebtn && e.target !== tlinks) {
+
+//         // check if menu is open 
+
+//         if (tlinks.classList.contains("open")) {
+
+//         // toggle class "menu-active" on button 
+//         togglebtn.classList.toggle("menu-active");
+//         //toggle class "open on links " 
+//         tlinks.classList.toggle("open");
+
+//         }
+//     }
+// });
 
 // stop propagation on menu 
 tlinks.onclick = function (e) {

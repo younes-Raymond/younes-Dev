@@ -299,21 +299,5 @@ app.post('/submit-form', (req, res) => {
     res.send('Message sent successfully!');
 });
 
-  const emitter = new EventEmitter();
-
-emitter.setMaxListeners(20); // set max listeners before adding any listeners
-
-emitter.on('event1', () => {
-  // event1 handler
-});
-
-emitter.on('event2', () => {
-  // event2 handler
-});
-
-// ... more event listeners added here
-emitter.emit('event1');
-emitter.emit('event2');
-
 const PORT = process.env.PORT || 8000;
 app.listen(PORT, () => console.log(`server listen at ${PORT}`))
